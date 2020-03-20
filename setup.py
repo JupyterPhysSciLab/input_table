@@ -19,8 +19,10 @@ setuptools.setup(
     ],
     classifiers=[
         'Development Status :: 3 - Alpha',
-        'Intended Audience :: Developers :: End Users',
+        'Intended Audience :: Developers',
+        'Intended Audience :: End Users',
         'License :: GPL-3.0+',
-        'Programming Language :: Python 3 :: Javascript'
+        'Programming Language :: Python 3',
+        'Programming Language :: JavaScript'
     ]
 )
