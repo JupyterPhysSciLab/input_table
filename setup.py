@@ -20,7 +20,7 @@ setuptools.setup(
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
-        'Intended Audience :: End Users',
+        'Intended Audience :: Education',
         'License :: GPL-3.0+',
         'Programming Language :: Python 3',
         'Programming Language :: JavaScript'
