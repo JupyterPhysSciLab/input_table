@@ -25,6 +25,7 @@ setuptools.setup(
         'Intended Audience :: Education',
         'License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',
         'Programming Language :: Python :: 3',
-        'Programming Language :: JavaScript'
+        'Programming Language :: JavaScript',
+        'Operating System :: OS Independent'
     ]
 )
