@@ -1,10 +1,12 @@
 **DataTable**
+
 Tools for generating predefined data input tables for use in Jupyter notebooks.
 This is primarily for student worksheets.
 
 **Current Features:**
+
 * Can create a table using a python command in the Jupyter notebook.
-* If using JupyterPhysSciLab/JupyterPiDAQ or /InstructorTools tables can be
+* If using JupyterPhysSciLab/JupyterPiDAQ or JupyterPhysSciLab/InstructorTools tables can be
 created using menu items in the Jupyter notebook (recommended usage).
 * Table column and row labels can be locked once set.
 * Number of rows and columns must be chosen on initial creation.
@@ -15,6 +17,7 @@ undeletable.
 kernel. Tables are viewable, but not editable in a plain vanilla Jupyter install.
 
 **Wishlist:**
+
 * Create pandadf from a table.
 
 **Installation**
@@ -34,7 +37,7 @@ available in your command shell. More discussion:
     environment if you do not already have it on your machine. If Jupyter is already
     installed the virtual environment will use the existing installation. This takes
     a long time on a Raspberry Pi. It will not run on a 3B+ without at least 1 GB of
-    swap (see: [Build Jupyter on a Pi](https://www.uwosh.edu/facstaff/gutow/computer-and-programming-how-tos/installing-jupyter-on-raspberrian).
+    swap. See: [Build Jupyter on a Pi](https://www.uwosh.edu/facstaff/gutow/computer-and-programming-how-tos/installing-jupyter-on-raspberrian).
     1. Still within the environment shell test this by starting jupyter 
     `$ jupyter notebook`. Jupyter should launch in your browser.
         1. Open a new notebook using the default (Python 3) kernel.
@@ -42,8 +45,7 @@ available in your command shell. More discussion:
         1. To try use the command `create_input_table()`. This should generate a blank code cell
         and another code cell that has a table in the output for you to define your table dimensions.
         1. If you define the dimensions the input table will be created for you.
-1. (Optional) You can make this environment available to an alternate Jupyter
-install as a special kernel when you are the user.
+1. _Optional_ You can make this environment available to an alternate Jupyter install as a special kernel when you are the user.
     1. Make sure you are running in your virtual environment `$ pipenv shell` in the directory for  virtual
     environment will do that.
     1. Issue the command to add this as a kernel to your personal space: 
@@ -52,7 +54,10 @@ install as a special kernel when you are the user.
     (_Parametric Thoughts_) can be found [here](https://janakiev.com/til/jupyter-virtual-envs/). 
     
 _Development_
+
 Simply replace `$ pip install DataTable` with `$ pip install -e DataTable` in the _Production_
 instructions.
 
-Issues or comments: [JupyterPhysSciLab/DataTable](https://github.com/JupyterPhysSciLab/DataTable)
+**Issues or comments**
+
+[JupyterPhysSciLab/DataTable](https://github.com/JupyterPhysSciLab/DataTable)

@@ -8,6 +8,8 @@ setuptools.setup(
     version="0.5.0",
     description="Predefined data input tables for Jupyter notebooks",
     long_description=long_description,
+    long_description_content_type="text/markdown",
+    url="https://github.com/JupyterPhysSciLab/DataTable",
     author="Jonathan Gutow",
     author_email="jgutow@new.rr.com",
     license="GPL-3.0+",
