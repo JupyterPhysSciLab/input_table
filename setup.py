@@ -4,7 +4,7 @@ with open("README.md", "r") as f:
     long_description = f.read()
 
 setuptools.setup(
-    name="InputTable",
+    name="DataTable",
     version="0.5.0",
     description="Predefined data input tables for Jupyter notebooks",
     long_description=long_description,
