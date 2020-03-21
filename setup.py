@@ -4,16 +4,18 @@ with open("README.md", "r") as f:
     long_description = f.read()
 
 setuptools.setup(
-    name="DataTable",
+    name="jupyter-datainputtable",
     version="0.5.0",
     description="Predefined data input tables for Jupyter notebooks",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/JupyterPhysSciLab/DataTable",
+    url="https://github.com/JupyterPhysSciLab/jupyter-datainputtable",
     author="Jonathan Gutow",
     author_email="jgutow@new.rr.com",
     license="GPL-3.0+",
     packages=setuptools.find_packages(),
+    package_data={'input_table': ['javascript/*.js']},
+    include_package_data=True,
     install_requires=[
         # 'python>=3.6',
         'jupyter>=1.0.0',
