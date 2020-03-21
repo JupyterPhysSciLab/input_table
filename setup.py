@@ -22,7 +22,7 @@ setuptools.setup(
         #'pandas>=0.22.0'
     ],
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
         'Intended Audience :: Education',
         'License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',

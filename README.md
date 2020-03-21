@@ -1,4 +1,4 @@
-**DataTable**
+**jupyter-datainputtable**
 
 Tools for generating predefined data input tables for use in Jupyter notebooks.
 This is primarily for student worksheets.
@@ -33,18 +33,20 @@ available in your command shell. More discussion:
 1. Navigate to the directory where this package will be installed.
 1. Start a shell in the environment `$ pipenv shell`.
 1. Install using pip.
-    1. `$ pip install DataTable`. This will install Jupyter into the same virtual
+    1. `$ pip install jupyter-datainputtable`. This will install Jupyter into the same virtual
     environment if you do not already have it on your machine. If Jupyter is already
     installed the virtual environment will use the existing installation. This takes
     a long time on a Raspberry Pi. It will not run on a 3B+ without at least 1 GB of
     swap. See: [Build Jupyter on a Pi](https://www.uwosh.edu/facstaff/gutow/computer-and-programming-how-tos/installing-jupyter-on-raspberrian).
-    1. Still within the environment shell test this by starting jupyter 
-    `$ jupyter notebook`. Jupyter should launch in your browser.
+    1. Still within the environment shell test this by starting jupyter
+`$ jupyter notebook`. Jupyter should launch in your browser.
         1. Open a new notebook using the default (Python 3) kernel.
-        1. In the first cell import all from input_table: `from input_table import *`.
-        1. To try use the command `create_input_table()`. This should generate a blank code cell
+        1. In the first cell import the input_table module:
+            `from jupyter_datainputtable.input_table import *`
+        1. To try use the command `create_input_table()` in the next cell. This should generate a blank code cell
         and another code cell that has a table in the output for you to define your table dimensions.
         1. If you define the dimensions the input table will be created for you.
+        
 1. _Optional_ You can make this environment available to an alternate Jupyter install as a special kernel when you are the user.
     1. Make sure you are running in your virtual environment `$ pipenv shell` in the directory for  virtual
     environment will do that.
@@ -55,9 +57,9 @@ available in your command shell. More discussion:
     
 _Development_
 
-Simply replace `$ pip install DataTable` with `$ pip install -e DataTable` in the _Production_
+Simply replace `$ pip install jupyter-datainputtable` with `$ pip install -e jupyter-datainputtable` in the _Production_
 instructions.
 
 **Issues or comments**
 
-[JupyterPhysSciLab/DataTable](https://github.com/JupyterPhysSciLab/DataTable)
+[JupyterPhysSciLab/DataTable](https://github.com/JupyterPhysSciLab/jupyter-datainputtable)
