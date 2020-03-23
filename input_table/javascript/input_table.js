@@ -126,6 +126,9 @@ function create_table(){
     tempstr+='</tbody></table>';
     var currentcell = Jupyter.notebook.get_selected_cell();
     currentcell.set_text(prestr+'display(HTML(\''+tempstr+'\'))');
+    //protect the cell so user cannot edit or delete the code without knowing 
+    // what they are doing.
+    currentcell.metadata.editable=false;
     currentcell.execute();
 }
 
