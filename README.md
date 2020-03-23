@@ -62,4 +62,4 @@ instructions.
 
 **Issues or comments**
 
-[JupyterPhysSciLab/DataTable](https://github.com/JupyterPhysSciLab/jupyter-datainputtable)
+[JupyterPhysSciLab/jupyter-datainputtable](https://github.com/JupyterPhysSciLab/jupyter-datainputtable)
