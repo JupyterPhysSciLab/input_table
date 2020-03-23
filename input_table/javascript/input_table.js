@@ -90,7 +90,7 @@ function create_table(){
     var dataCellClass='data_cell';
     var prestr='# If no data table appears in the output of this cell, run the cell to display the table.\n';
     prestr+='try:\n';
-    prestr+='    from jupyter_datainputtable.input_table import *\n';
+    prestr+='    from input_table import *\n';
     prestr+='except (ImportError, FileNotFoundError) as e:\n';
     prestr+='    from IPython.display import HTML\n';
     prestr+='    print("Table editing will not work because `jupyter_datainputtable` module is not installed in python kernel")\n';
@@ -190,7 +190,7 @@ function save_input_table(tableID){
     var tablecnt = table.innerHTML;
     var tablestr='# If no data table appears in the output of this cell, run the cell to display the table.\n';
     tablestr+='try:\n';
-    tablestr+='    from jupyter_datainputtable.input_table import *\n';
+    tablestr+='    from input_table import *\n';
     tablestr+='except (ImportError, FileNotFoundError) as e:\n';
     tablestr+='    from IPython.display import HTML\n';
     tablestr+='    print("Table editing will not work because `jupyter_datainputtable` module is not installed in python kernel")\n';

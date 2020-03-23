@@ -42,7 +42,7 @@ available in your command shell. More discussion:
 `$ jupyter notebook`. Jupyter should launch in your browser.
         1. Open a new notebook using the default (Python 3) kernel.
         1. In the first cell import the input_table module:
-            `from jupyter_datainputtable.input_table import *`
+            `from input_table import *`
         1. To try use the command `create_input_table()` in the next cell. This should generate a blank code cell
         and another code cell that has a table in the output for you to define your table dimensions.
         1. If you define the dimensions the input table will be created for you.
