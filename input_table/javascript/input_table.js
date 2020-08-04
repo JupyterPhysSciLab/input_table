@@ -205,3 +205,73 @@ function save_input_table(tableID){
     tablestr+='\'))';
     currentcell.set_text(tablestr);
 }
+/**
+ * Utility functions for getting user input
+ **/
+
+ /**
+ * Create a simple input dialog (modal) that does not depend on a library, but works in Jupyter.
+ * @param dialogid a single word string that will be used as the dialog id to that it can be accessed in the DOM.
+ * @param post_processor a function definition to be called by the do-it button (see example later in this comment).
+ * @param instructions a string providing general instructions for the user or at minimum a dialog title.
+ * @param fields a list of strings that will be used as the titles for the fields. The length of this list
+ *               determines how many input fileds the dialog will containe (1 per line).
+ *
+ * post_processor function must be based on the following skeleton. Replace <...> with appropriate variables or
+ *  strings.
+ *
+ * var <name_of_post_processor> = '('+function (){
+ *    var dialog = document.getElementById("<dialogid_string>")
+ *    var inputs = dialog.querySelectorAll('input');
+ *    var values = [];
+ *    for (var i=0;i<inputs.length;i++){
+ *        values[i]=inputs[i].value;
+ *    }
+ *    dialog.remove();
+ *    <code to use the items in values> //order of items is the same as the fields list.
+ *}+')();';
+ *
+ **/
+function input_dialog(dialogid, post_processor, instructions,fields){
+    var backdialog = document.createElement('div');
+    backdialog.setAttribute('id',"background_div")
+    var stylestr = 'position:fixed;left:0%;top:0%;width:100%;height:100%;z-index:-1;';
+    stylestr+='background-color:white;opacity:60%;';
+    backdialog.setAttribute('style',stylestr);
+    var tempdialog = document.createElement('div');
+    stylestr = 'position:fixed;left:20%;';
+    stylestr+='top:25%;width:60%;z-index:99;background-color:navajowhite;opacity:100%!important;';
+    stylestr+='border-style:solid!important;border:thick;border-color:red;';
+    tempdialog.setAttribute('style',stylestr);
+    tempdialog.setAttribute('id',dialogid);
+    //tempdialog.setAttribute('class','modal');
+    if (instructions!=''){
+        var tempinstr = document.createElement('H3');
+        tempinstr.setAttribute('style','text-align:center;');
+        tempinstr.innerHTML = instructions;
+        tempdialog.append(tempinstr);
+    }
+    for (var i=0;i<fields.length;i++){
+        var templine=document.createElement('p');
+        templine.innerHTML = fields[i]+': ';
+        var fieldstr = fields[i].replace(' ','_').replace('\'','').replace('/','_').replace('*','_').replace('\"','_');
+        var inputstr = '<input id="'+fieldstr+'" type="text" size="30" value="???" ';
+        inputstr += 'onblur="record_input(this)"></input>';
+        templine.innerHTML+=inputstr;
+        templine.setAttribute('style','text-align:center;');
+        tempdialog.append(templine);
+    }
+    var cancel_btn = document.createElement('button');
+    cancel_btn.innerHTML = "CANCEL"
+    var onclickstr = 'document.getElementById("'+dialogid+'").remove()';
+    cancel_btn.setAttribute('onclick',onclickstr);
+    tempdialog.append(cancel_btn);
+    var save_btn = document.createElement('button');
+    save_btn.setAttribute('onclick',post_processor);
+    save_btn.innerHTML = "OK/Do-It"
+    tempdialog.append(save_btn);
+    tempdialog.append(backdialog);
+    document.body.append(tempdialog);
+    Jupyter.notebook.keyboard_manager.enabled=false; //Make sure keyboard manager doesn't grab inputs.
+    tempdialog.focus();
+}
