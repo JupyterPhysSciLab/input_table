@@ -266,6 +266,7 @@ fields){
     var tempinfo = document.createElement('div');
     tempinfo.setAttribute('hidden', true);
     tempinfo.innerHTML = post_pr_info;
+    tempdialog.append(tempinfo);
     var cancel_btn = document.createElement('button');
     cancel_btn.innerHTML = "CANCEL"
     var onclickstr = 'document.getElementById("'+dialogid+'").remove()';
