@@ -227,7 +227,7 @@ function save_input_table(tableID){
  *    for (var i=0;i<inputs.length;i++){
  *        values[i]=inputs[i].value;
  *    }
- *    info = dialog.querySelectorAll('post_pr_info')[0].innerHTML;
+ *    info = dialog.querySelectorAll('#post_pr_info')[0].innerHTML;
  *    dialog.remove();
  *    <code to use the items in values and post_pr_info> //order of items is
  *    the same as the fields list.
