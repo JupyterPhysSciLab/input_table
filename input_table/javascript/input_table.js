@@ -282,3 +282,65 @@ fields){
     Jupyter.notebook.keyboard_manager.enabled=false; //Make sure keyboard manager doesn't grab inputs.
     tempdialog.focus();
 }
+
+var table_data_to_named_DF = '('+function (){
+     var dialog = document.getElementById("DFName_dia");
+     var inputs = dialog.querySelectorAll('input');
+     var values = [];
+     for (var i=0;i<inputs.length;i++){
+         values[i]=inputs[i].value;
+     }
+     info = dialog.querySelectorAll('#post_pr_info')[0].innerHTML;
+     dialog.remove();
+ //    <code to use the items in values and post_pr_info> //order of items is
+ //    the same as the fields list.
+    var parentTable = document.getElementById(info);
+    var rows = parentTable.querySelectorAll('tr');
+    var nrows = rows.length;
+    var ncols = rows[0].querySelectorAll('td').length;
+    var colnames = [];
+    var escnamestr = []
+    var data = [];
+    //sort data into columns
+    for(var i=1;i<ncols;i++){
+        var classstr='.c'+i
+        colnames[i-1]=rows[0].querySelectorAll(classstr)[0].querySelectorAll(".table_label")[0].innerHTML;
+        escnamestr[i-1] = colnames[i-1].replace(' ','_').replace('(','_').replace(')','_').replace('/','_').replace('*','_');
+        var tempcol =[];
+        for (var k=1;k<nrows;k++){
+            classstr = '.r'+k+'.c'+i;
+            tempcol[k-1] = rows[k].querySelectorAll(classstr)[0].querySelectorAll(".data_cell")[0].innerHTML;
+        }
+        data[i-1]=tempcol;
+    }
+    // Generate non-coder readable python code to put data into a DataFrame.
+    var pythoncode = "";
+    var dataframe_param = "{";
+    for (var i=0;i<(ncols-1);i++){
+        pythoncode += escnamestr[i]+"=["+data[i]+"]\n";
+        dataframe_param +="\""+colnames[i]+"\":"+escnamestr[i]+",\n";
+    }
+    dataframe_param +="}"
+    pythoncode += values[0]+ "= pd.DataFrame("+dataframe_param+")\n";
+    pythoncode += "print('DataFrame `"+values[0]+"`:')\n";
+    pythoncode += values[0];
+
+
+    // Insert a cell below the cell containing the table. Load with Python code that is non-coder readable.
+    // Run the cell to create the DataFrame.
+    select_containing_cell(parentTable); //Make sure the cell containing the table is selected by Jupyter.
+    Jupyter.notebook.insert_cell_below();
+    Jupyter.notebook.select_next(true);
+    Jupyter.notebook.focus_cell();
+    var currentcell = Jupyter.notebook.get_selected_cell();
+    currentcell.set_text(pythoncode);
+    currentcell.execute();
+ }+')();';
+
+function data_table_to_Pandas(tableID){
+    // Use dialog to get user choice for name of the DataFrame. Assumes Pandas import as `pd`.
+    var instructions = "Provide a name for the Pandas DataFrame:";
+    var fields = ["Name"]
+    input_dialog("DFName_dia", table_data_to_named_DF, tableID, instructions,fields)
+
+}
