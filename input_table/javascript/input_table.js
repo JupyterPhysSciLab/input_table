@@ -264,6 +264,7 @@ fields){
         tempdialog.append(templine);
     }
     var tempinfo = document.createElement('div');
+    tempinfo.setAttribute('id','post_pr_info');
     tempinfo.setAttribute('hidden', true);
     tempinfo.innerHTML = post_pr_info;
     tempdialog.append(tempinfo);
