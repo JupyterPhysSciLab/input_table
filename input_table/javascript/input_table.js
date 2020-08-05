@@ -221,18 +221,21 @@ function save_input_table(tableID){
  *  strings.
  *
  * var <name_of_post_processor> = '('+function (){
- *    var dialog = document.getElementById("<dialogid_string>")
+ *    var dialog = document.getElementById("<dialogid_string>");
  *    var inputs = dialog.querySelectorAll('input');
  *    var values = [];
  *    for (var i=0;i<inputs.length;i++){
  *        values[i]=inputs[i].value;
  *    }
+ *    info = dialog.querySelectorAll('post_pr_info')[0].innerHTML;
  *    dialog.remove();
- *    <code to use the items in values> //order of items is the same as the fields list.
+ *    <code to use the items in values and post_pr_info> //order of items is
+ *    the same as the fields list.
  *}+')();';
  *
  **/
-function input_dialog(dialogid, post_processor, instructions,fields){
+function input_dialog(dialogid, post_processor, post_pr_info, instructions,
+fields){
     var backdialog = document.createElement('div');
     backdialog.setAttribute('id',"background_div")
     var stylestr = 'position:fixed;left:0%;top:0%;width:100%;height:100%;z-index:-1;';
@@ -244,7 +247,6 @@ function input_dialog(dialogid, post_processor, instructions,fields){
     stylestr+='border-style:solid!important;border:thick;border-color:red;';
     tempdialog.setAttribute('style',stylestr);
     tempdialog.setAttribute('id',dialogid);
-    //tempdialog.setAttribute('class','modal');
     if (instructions!=''){
         var tempinstr = document.createElement('H3');
         tempinstr.setAttribute('style','text-align:center;');
@@ -261,6 +263,9 @@ function input_dialog(dialogid, post_processor, instructions,fields){
         templine.setAttribute('style','text-align:center;');
         tempdialog.append(templine);
     }
+    var tempinfo = document.createElement('div');
+    tempinfo.setAttribute('hidden', true);
+    tempinfo.innerHTML = post_pr_info;
     var cancel_btn = document.createElement('button');
     cancel_btn.innerHTML = "CANCEL"
     var onclickstr = 'document.getElementById("'+dialogid+'").remove()';
