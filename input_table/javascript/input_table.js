@@ -8,24 +8,21 @@ function get_table_dim(){
     Jupyter.notebook.select_next(true);
     Jupyter.notebook.focus_cell();
     var currentcell = Jupyter.notebook.get_selected_cell();
-/*
     var htmlstr =`
-    <div id="input_table_dim_dlg" style="border:thick;border-color:red;border-style:solid;">
-      <div>Set table size remembering to include enough rows and columns for labels.</div>
-      <table id="init_input_table_dim"><tr>
-        <td> Rows:</td><td><input id="init_row_dim" type="text" size="7" value="2"
-          onblur="record_input(this)"></input></td>
-        <td>Columns:</td><td><input id="init_col_dim" type="text" size="7" value="2"
-          onblur="record_input(this)"></input></td>
-        <td><button onclick="create_table()">Create Table</button></td>
-      </tr></table>
-    </div>`
-*/
-    var instructions = "Set table size remembering to include enough rows and\
-    columns for labels.";
+//    <div id="input_table_dim_dlg" style="border:thick;border-color:red;border-style:solid;">
+//      <div>Set table size remembering to include enough rows and columns for labels.</div>
+//      <table id="init_input_table_dim"><tr>
+//        <td> Rows:</td><td><input id="init_row_dim" type="text" size="7" value="2"
+//          onblur="record_input(this)"></input></td>
+//        <td>Columns:</td><td><input id="init_col_dim" type="text" size="7" value="2"
+//          onblur="record_input(this)"></input></td>
+//        <td><button onclick="create_table()">Create Table</button></td>
+//      </tr></table>
+//    </div>`
+
+    var instructions = "Set table size remembering to include enough rows and columns for labels.";
     var fields = ["Number of Rows", "Number of Columns"];
-    input_dialog("input_table_dim_dlg", create_table,"not used", instructions,\
-    fields);
+    input_dialog("input_table_dim_dlg", create_table,"not used", instructions,fields);
     //currentcell.set_text('display(HTML("""'+htmlstr+'"""))');
     //currentcell.execute();
 }
@@ -123,8 +120,8 @@ function create_table(){
     var inputs = dialog.querySelectorAll('input');
     var nrows = inputs[0].value;
     var ncols = inputs[1].value;
-     var info = dialog.querySelectorAll('#post_pr_info')[0].innerHTML;
-     dialog.remove();
+    var info = dialog.querySelectorAll('#post_pr_info')[0].innerHTML;
+    dialog.remove();
     //alert(nrows+', '+ncols)
     var d = new Date();
     var ID = 'it_'+(Math.round(d.getTime()));
