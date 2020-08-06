@@ -84,7 +84,7 @@ function table_menu(tableID){
         }
     }
     var optiontxt = '<option title="Things you can do to this table.">Table Actions</option>';
-    optiontxt+='<option title="Save the table contents.">Save Updates</option>';
+//    optiontxt+='<option title="Save the table contents.">Save Updates</option>';
     optiontxt+='<option title="Start editing the data.">Edit Data</option>';
     optiontxt+='<option title="Create a Panda DataFrame from table.">Data to Pandas...</option>';
     menu.innerHTML=optiontxt;
@@ -241,6 +241,7 @@ function save_input_table(tableID){
     tablestr+=tablecnt.replace(re,' ').replace(re2,'\\\'')+'</table>';
     tablestr+='\'))';
     currentcell.set_text(tablestr);
+    currentcell.execute();
 }
 /**
  * Utility functions for getting user input
@@ -350,17 +351,19 @@ var table_data_to_named_DF = '('+function (){
         data[i-1]=tempcol;
     }
     // Generate non-coder readable python code to put data into a DataFrame.
-    var pythoncode = "";
+    var pythoncode = "try:\n";
+    pythoncode +="    if isinstance(pd.DataFrame(), pd.core.frame.DataFrame):
     var dataframe_param = "{";
     for (var i=0;i<(ncols-1);i++){
         pythoncode += escnamestr[i]+"=["+data[i]+"]\n";
         dataframe_param +="\""+colnames[i]+"\":"+escnamestr[i]+",\n";
     }
     dataframe_param +="}"
-    pythoncode += values[0]+ "= pd.DataFrame("+dataframe_param+")\n";
-    pythoncode += "print('DataFrame `"+values[0]+"`:')\n";
-    pythoncode += values[0];
-
+    pythoncode += '    '+values[0]+ "= pd.DataFrame("+dataframe_param+")\n";
+    pythoncode += '    '+"print('DataFrame `"+values[0]+"`:')\n";
+    pythoncode += '    '+values[0];
+    pythoncode += 'except NameError as e:';
+    pythoncode += '    print("Sorry, Pandas needs to be imported using the statement `import pandas as pd` first.")';
 
     // Insert a cell below the cell containing the table. Load with Python code that is non-coder readable.
     // Run the cell to create the DataFrame.
