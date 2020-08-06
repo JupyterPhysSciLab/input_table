@@ -8,6 +8,7 @@ function get_table_dim(){
     Jupyter.notebook.select_next(true);
     Jupyter.notebook.focus_cell();
     var currentcell = Jupyter.notebook.get_selected_cell();
+/*
     var htmlstr =`
     <div id="input_table_dim_dlg" style="border:thick;border-color:red;border-style:solid;">
       <div>Set table size remembering to include enough rows and columns for labels.</div>
@@ -19,6 +20,12 @@ function get_table_dim(){
         <td><button onclick="create_table()">Create Table</button></td>
       </tr></table>
     </div>`
+*/
+    var instructions = "Set table size remembering to include enough rows and
+    columns for labels.";
+    var fields = ["Number of Rows", "Number of Columns"];
+    input_dialog("input_table_dim_dlg", create_table,"not used", instructions,
+    fields);
     currentcell.set_text('display(HTML("""'+htmlstr+'"""))');
     currentcell.execute();
 }
@@ -75,10 +82,17 @@ function table_menu(tableID){
         if (lastvalue=="Edit Data"){
             edit_input_table(tableID);
         }
-        if (lastvlue=="Data to Pandas..."){
+        if (lastvalue=="Data to Pandas..."){
             data_table_to_Pandas(tableID);
         }
     }
+    var optiontxt = '<option title="Things you can do to this table
+    .">Table Actions</option>';
+    optiontxt+='<option title="Save the table contents.">Save Updates</option>';
+    optiontxt+='<option title="Start editing the data.">Edit Data</option>';
+    optiontxt+='<option title="Create a Panda DataFrame from table.">Data to
+    Pandas...</option>';
+    menu.innerHTML=optiontxt;
     return menu
 }
 
@@ -101,9 +115,16 @@ function lock_labels(tableID){
 }
 //Create the table using the info collected in the dimension table.
 function create_table(){
+/*
     var nrows = document.getElementById("init_row_dim").value;
     var ncols = document.getElementById("init_col_dim").value;
-    document.getElementById("input_table_dim_dlg").remove();
+*/
+    var dialog = document.getElementById("input_table_dim_dlg");
+    var inputs = dialog.querySelectorAll('input');
+    var nrows = inputs[0].value;
+    var ncols = inputs[1].value;
+     var info = dialog.querySelectorAll('#post_pr_info')[0].innerHTML;
+     dialog.remove();
     //alert(nrows+', '+ncols)
     var d = new Date();
     var ID = 'it_'+(Math.round(d.getTime()));
@@ -249,7 +270,7 @@ function save_input_table(tableID){
  *    for (var i=0;i<inputs.length;i++){
  *        values[i]=inputs[i].value;
  *    }
- *    info = dialog.querySelectorAll('#post_pr_info')[0].innerHTML;
+ *    var info = dialog.querySelectorAll('#post_pr_info')[0].innerHTML;
  *    dialog.remove();
  *    <code to use the items in values and post_pr_info> //order of items is
  *    the same as the fields list.
