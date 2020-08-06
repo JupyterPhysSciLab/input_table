@@ -8,7 +8,7 @@ function get_table_dim(){
     Jupyter.notebook.select_next(true);
     Jupyter.notebook.focus_cell();
     var currentcell = Jupyter.notebook.get_selected_cell();
-    var htmlstr =`
+//    var htmlstr =`
 //    <div id="input_table_dim_dlg" style="border:thick;border-color:red;border-style:solid;">
 //      <div>Set table size remembering to include enough rows and columns for labels.</div>
 //      <table id="init_input_table_dim"><tr>
