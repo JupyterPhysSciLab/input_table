@@ -73,9 +73,9 @@ function table_menu(tableID){
     menu.onchange = function(){
         var lastvalue = this.value;
         this.value = "Table Actions";
-        if (lastvalue=="Save Updates"){
-            save_input_table(tableID);
-        }
+//        if (lastvalue=="Save Updates"){
+//            save_input_table(tableID);
+//        }
         if (lastvalue=="Edit Data"){
             edit_input_table(tableID);
         }
@@ -198,13 +198,13 @@ function edit_input_table(tableID){
     for(var i=0;i<datainputs.length;i++){
         data_cell_to_input_cell(datainputs[i]);
     }
-    //var editbtn = table.querySelector('.edit_btn');
-    //var tempelem = document.createElement('button');
-    //tempelem.classList.add('save_btn');
-    //var onclickstr = "save_input_table('"+tableID+"');"
-    //tempelem.setAttribute('onclick',onclickstr);
-    //tempelem.innerHTML='Save Data';
-    //editbtn.replaceWith(tempelem);
+    var menu = table.querySelector('.table-actions');
+    var tempelem = document.createElement('button');
+    tempelem.classList.add('save_btn');
+    var onclickstr = "save_input_table('"+tableID+"');"
+    tempelem.setAttribute('onclick',onclickstr);
+    tempelem.innerHTML='Save Data';
+    menu.replaceWith(tempelem);
 }
 
 //Save table by making the code cell create it. Actuated by button.
@@ -220,13 +220,13 @@ function save_input_table(tableID){
     for(var i=0;i<datainputs.length;i++){
         input_element_to_fixed(datainputs[i]);
     }    
-    //var savebtn = table.querySelector('.save_btn');
-    //var tempelem = document.createElement('button');
+    var savebtn = table.querySelector('.save_btn');
+    var tempelem = table_menu(tableID);
     //tempelem.classList.add('edit_btn');
     //var onclickstr = "edit_input_table('"+tableID+"');"
     //tempelem.setAttribute('onclick',onclickstr);
     //tempelem.innerHTML='Edit Data';
-    //savebtn.replaceWith(tempelem);
+    savebtn.replaceWith(tempelem);
     var tablecnt = table.innerHTML;
     var tablestr='# If no data table appears in the output of this cell, run the cell to display the table.\n';
     tablestr+='try:\n';
