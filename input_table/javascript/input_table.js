@@ -21,13 +21,13 @@ function get_table_dim(){
       </tr></table>
     </div>`
 */
-    var instructions = "Set table size remembering to include enough rows and
+    var instructions = "Set table size remembering to include enough rows and\
     columns for labels.";
     var fields = ["Number of Rows", "Number of Columns"];
-    input_dialog("input_table_dim_dlg", create_table,"not used", instructions,
+    input_dialog("input_table_dim_dlg", create_table,"not used", instructions,\
     fields);
-    currentcell.set_text('display(HTML("""'+htmlstr+'"""))');
-    currentcell.execute();
+    //currentcell.set_text('display(HTML("""'+htmlstr+'"""))');
+    //currentcell.execute();
 }
 
 //Update html on change of cell content.
