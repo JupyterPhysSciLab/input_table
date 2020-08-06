@@ -83,12 +83,10 @@ function table_menu(tableID){
             data_table_to_Pandas(tableID);
         }
     }
-    var optiontxt = '<option title="Things you can do to this table
-    .">Table Actions</option>';
+    var optiontxt = '<option title="Things you can do to this table.">Table Actions</option>';
     optiontxt+='<option title="Save the table contents.">Save Updates</option>';
     optiontxt+='<option title="Start editing the data.">Edit Data</option>';
-    optiontxt+='<option title="Create a Panda DataFrame from table.">Data to
-    Pandas...</option>';
+    optiontxt+='<option title="Create a Panda DataFrame from table.">Data to Pandas...</option>';
     menu.innerHTML=optiontxt;
     return menu
 }
@@ -111,24 +109,23 @@ function lock_labels(tableID){
     save_input_table(tableID);
 }
 //Create the table using the info collected in the dimension table.
-function create_table(){
+var create_table = '('+function (){
 /*
     var nrows = document.getElementById("init_row_dim").value;
     var ncols = document.getElementById("init_col_dim").value;
 */
     var dialog = document.getElementById("input_table_dim_dlg");
-    var inputs = dialog.querySelectorAll('input');
+    var inputs = dialog.querySelectorAll("input");
     var nrows = inputs[0].value;
     var ncols = inputs[1].value;
-    var info = dialog.querySelectorAll('#post_pr_info')[0].innerHTML;
+    var info = dialog.querySelectorAll("#post_pr_info")[0].innerHTML;
     dialog.remove();
     //alert(nrows+', '+ncols)
     var d = new Date();
-    var ID = 'it_'+(Math.round(d.getTime()));
-    var labelClass = 'table_label';
-    var dataCellClass='data_cell';
-    var prestr='# If no data table appears in the output of this cell, run the
-    cell to display the table.\n\n';
+    var ID = "it_"+(Math.round(d.getTime()));
+    var labelClass = "table_label";
+    var dataCellClass="data_cell";
+    var prestr='# If no data table appears in the output of this cell, run the cell to display the table.\n\n';
     prestr+='try:\n';
     prestr+='    from input_table import *\n';
     prestr+='except (ImportError, FileNotFoundError) as e:\n';
@@ -170,7 +167,7 @@ function create_table(){
     // what they are doing.
     currentcell.metadata.editable=false;
     currentcell.execute();
-}
+}+')();';
 
 //Utility function that is not used because the Jupyter notebook cell indexing is maintained
 // independently of the DOM.
@@ -274,8 +271,7 @@ function save_input_table(tableID){
  *}+')();';
  *
  **/
-function input_dialog(dialogid, post_processor, post_pr_info, instructions,
-fields){
+function input_dialog(dialogid, post_processor, post_pr_info, instructions,fields){
     var backdialog = document.createElement('div');
     backdialog.setAttribute('id',"background_div")
     var stylestr = 'position:fixed;left:0%;top:0%;width:100%;height:100%;z-index:-1;';
