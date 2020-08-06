@@ -62,6 +62,26 @@ function data_cell_to_input_cell(element){
     element.replaceWith(tempelem);
 }
 
+function table_menu(tableID){
+    var menu = document.createElement('select');
+    menu.classList.add('form-control');
+    menu.classList.add('table-actions');
+    menu.onchange = function(){
+        var lastvalue = this.value;
+        this.value = "Table Actions";
+        if (lastvalue=="Save Updates"){
+            save_input_table(tableID);
+        }
+        if (lastvalue=="Edit Data"){
+            edit_input_table(tableID);
+        }
+        if (lastvlue=="Data to Pandas..."){
+            data_table_to_Pandas(tableID);
+        }
+    }
+    return menu
+}
+
 function lock_labels(tableID){
 //Will need to use querySelectorAll(css)
     var parentTable = document.getElementById(tableID);
@@ -70,11 +90,12 @@ function lock_labels(tableID){
         input_element_to_fixed(labelinputs[i]);
     }
     var lockbtn = parentTable.querySelector('.lock_btn');
-    var tempelem = document.createElement('button');
-    tempelem.classList.add('save_btn');
-    var onclickstr = "save_input_table('"+tableID+"')"
-    tempelem.setAttribute('onclick',onclickstr);
-    tempelem.innerHTML='Save Updates';
+    //var tempelem = document.createElement('button');
+    //tempelem.classList.add('save_btn');
+    //var onclickstr = "save_input_table('"+tableID+"')"
+    //tempelem.setAttribute('onclick',onclickstr);
+    //tempelem.innerHTML='Save Updates';
+    var tempelem = table_menu(tableID);
     lockbtn.replaceWith(tempelem);
     save_input_table(tableID);
 }
@@ -88,7 +109,8 @@ function create_table(){
     var ID = 'it_'+(Math.round(d.getTime()));
     var labelClass = 'table_label';
     var dataCellClass='data_cell';
-    var prestr='# If no data table appears in the output of this cell, run the cell to display the table.\n';
+    var prestr='# If no data table appears in the output of this cell, run the
+    cell to display the table.\n\n';
     prestr+='try:\n';
     prestr+='    from input_table import *\n';
     prestr+='except (ImportError, FileNotFoundError) as e:\n';
@@ -161,13 +183,13 @@ function edit_input_table(tableID){
     for(var i=0;i<datainputs.length;i++){
         data_cell_to_input_cell(datainputs[i]);
     }
-    var editbtn = table.querySelector('.edit_btn');
-    var tempelem = document.createElement('button');
-    tempelem.classList.add('save_btn');
-    var onclickstr = "save_input_table('"+tableID+"');"
-    tempelem.setAttribute('onclick',onclickstr);
-    tempelem.innerHTML='Save Data';
-    editbtn.replaceWith(tempelem);
+    //var editbtn = table.querySelector('.edit_btn');
+    //var tempelem = document.createElement('button');
+    //tempelem.classList.add('save_btn');
+    //var onclickstr = "save_input_table('"+tableID+"');"
+    //tempelem.setAttribute('onclick',onclickstr);
+    //tempelem.innerHTML='Save Data';
+    //editbtn.replaceWith(tempelem);
 }
 
 //Save table by making the code cell create it. Actuated by button.
@@ -183,13 +205,13 @@ function save_input_table(tableID){
     for(var i=0;i<datainputs.length;i++){
         input_element_to_fixed(datainputs[i]);
     }    
-    var savebtn = table.querySelector('.save_btn');
-    var tempelem = document.createElement('button');
-    tempelem.classList.add('edit_btn');
-    var onclickstr = "edit_input_table('"+tableID+"');"
-    tempelem.setAttribute('onclick',onclickstr);
-    tempelem.innerHTML='Edit Data';
-    savebtn.replaceWith(tempelem);
+    //var savebtn = table.querySelector('.save_btn');
+    //var tempelem = document.createElement('button');
+    //tempelem.classList.add('edit_btn');
+    //var onclickstr = "edit_input_table('"+tableID+"');"
+    //tempelem.setAttribute('onclick',onclickstr);
+    //tempelem.innerHTML='Edit Data';
+    //savebtn.replaceWith(tempelem);
     var tablecnt = table.innerHTML;
     var tablestr='# If no data table appears in the output of this cell, run the cell to display the table.\n';
     tablestr+='try:\n';
