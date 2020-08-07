@@ -66,25 +66,17 @@ function data_cell_to_input_cell(element){
     element.replaceWith(tempelem);
 }
 
+    
 function table_menu(tableID){
     var menu = document.createElement('select');
     menu.classList.add('form-control');
     menu.classList.add('table-actions');
-    menu.onchange = function(){
-        var lastvalue = this.value;
-        this.value = "Table Actions";
-//        if (lastvalue=="Save Updates"){
-//            save_input_table(tableID);
-//        }
-        if (lastvalue=="Edit Data"){
-            edit_input_table(tableID);
-        }
-        if (lastvalue=="Data to Pandas..."){
-            data_table_to_Pandas(tableID);
-        }
-    }
+    var actionstr = 'var lastvalue = this.value;';
+    actionstr+='this.value = "Table Actions";';
+    actionstr+='if(lastvalue=="Edit Data"){edit_input_table("'+tableID+'");}';
+    actionstr+='if(lastvalue=="Data to Pandas..."){data_table_to_Pandas("'+tableID+'");}';
+    menu.setAttribute('onchange',actionstr);
     var optiontxt = '<option title="Things you can do to this table.">Table Actions</option>';
-//    optiontxt+='<option title="Save the table contents.">Save Updates</option>';
     optiontxt+='<option title="Start editing the data.">Edit Data</option>';
     optiontxt+='<option title="Create a Panda DataFrame from table.">Data to Pandas...</option>';
     menu.innerHTML=optiontxt;
@@ -219,14 +211,10 @@ function save_input_table(tableID){
     var datainputs = table.querySelectorAll('.data_cell');
     for(var i=0;i<datainputs.length;i++){
         input_element_to_fixed(datainputs[i]);
-    }    
-    var savebtn = table.querySelector('.save_btn');
-    var tempelem = table_menu(tableID);
-    //tempelem.classList.add('edit_btn');
-    //var onclickstr = "edit_input_table('"+tableID+"');"
-    //tempelem.setAttribute('onclick',onclickstr);
-    //tempelem.innerHTML='Edit Data';
-    savebtn.replaceWith(tempelem);
+    }
+    if(table.querySelector('.save_btn')){
+        table.querySelector('.save_btn').replaceWith(table_menu(tableID));
+    }
     var tablecnt = table.innerHTML;
     var tablestr='# If no data table appears in the output of this cell, run the cell to display the table.\n';
     tablestr+='try:\n';
@@ -294,7 +282,7 @@ function input_dialog(dialogid, post_processor, post_pr_info, instructions,field
         var templine=document.createElement('p');
         templine.innerHTML = fields[i]+': ';
         var fieldstr = fields[i].replace(' ','_').replace('\'','').replace('/','_').replace('*','_').replace('\"','_');
-        var inputstr = '<input id="'+fieldstr+'" type="text" size="30" value="???" ';
+        var inputstr = '<input id="'+fieldstr+'" type="text" size="30" value="" ';
         inputstr += 'onblur="record_input(this)"></input>';
         templine.innerHTML+=inputstr;
         templine.setAttribute('style','text-align:center;');
@@ -316,8 +304,10 @@ function input_dialog(dialogid, post_processor, post_pr_info, instructions,field
     tempdialog.append(save_btn);
     tempdialog.append(backdialog);
     document.body.append(tempdialog);
-    Jupyter.notebook.keyboard_manager.enabled=false; //Make sure keyboard manager doesn't grab inputs.
+    Jupyter.notebook.focus_cell();//Make sure keyboard manager doesn't grab inputs.
+    Jupyter.notebook.keyboard_manager.enabled=false; 
     tempdialog.focus();
+    Jupyter.notebook.keyboard_manager.enabled=false; //Make sure keyboard manager doesn't grab inputs.
 }
 
 var table_data_to_named_DF = '('+function (){
@@ -351,19 +341,21 @@ var table_data_to_named_DF = '('+function (){
         data[i-1]=tempcol;
     }
     // Generate non-coder readable python code to put data into a DataFrame.
-    var pythoncode = "try:\n";
-    pythoncode +="    if isinstance(pd.DataFrame(), pd.core.frame.DataFrame):
-    var dataframe_param = "{";
+    var pythoncode = "";
+    var dataframe_param = "{\""+colnames[0]+"\":"+escnamestr[0]+",\n";
     for (var i=0;i<(ncols-1);i++){
         pythoncode += escnamestr[i]+"=["+data[i]+"]\n";
-        dataframe_param +="\""+colnames[i]+"\":"+escnamestr[i]+",\n";
+        if (i>0){dataframe_param +="    \""+colnames[i]+"\":"+escnamestr[i]+",\n";}
     }
-    dataframe_param +="}"
+    dataframe_param +="    }"
+    pythoncode += 'try: # Wrapping assigment in `try:...except:` allows us to check if Pandas is available.\n';
     pythoncode += '    '+values[0]+ "= pd.DataFrame("+dataframe_param+")\n";
-    pythoncode += '    '+"print('DataFrame `"+values[0]+"`:')\n";
-    pythoncode += '    '+values[0];
-    pythoncode += 'except NameError as e:';
-    pythoncode += '    print("Sorry, Pandas needs to be imported using the statement `import pandas as pd` first.")';
+    pythoncode += 'except NameError as e:\n';
+    pythoncode += '    print("Sorry, Pandas needs to be imported using the statement `import pandas as pd` first.")\n';
+    pythoncode += '    '+values[0]+' = "undefined"\n';
+    pythoncode += "print('DataFrame `"+values[0]+"`:')\n";
+    pythoncode += values[0];
+
 
     // Insert a cell below the cell containing the table. Load with Python code that is non-coder readable.
     // Run the cell to create the DataFrame.
@@ -378,8 +370,8 @@ var table_data_to_named_DF = '('+function (){
 
 function data_table_to_Pandas(tableID){
     // Use dialog to get user choice for name of the DataFrame. Assumes Pandas import as `pd`.
-    var instructions = "Provide a name for the Pandas DataFrame:";
-    var fields = ["Name"]
-    input_dialog("DFName_dia", table_data_to_named_DF, tableID, instructions,fields)
+    var instructions = "Provide a one-word name for the Pandas DataFrame:";
+    var fields = ["Name"];
+    input_dialog("DFName_dia", table_data_to_named_DF, tableID, instructions,fields);
 
 }
