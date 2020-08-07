@@ -15,10 +15,12 @@ created using menu items in the Jupyter notebook (recommended usage).
 undeletable.
 * Table creation code will work without this package installed in the Jupyter
 kernel. Tables are viewable, but not editable in a plain vanilla Jupyter install.
+* Option to create Pandas DataFrame from the table if Pandas imported as `pd`.
+If user tries without Pandas an explanation is provided.
 
 **Wishlist:**
 
-* Create pandadf from a table.
+* Add rows to existing table.
 
 **Installation**
 
