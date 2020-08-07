@@ -128,21 +128,19 @@ var create_table = '('+function (){
         tempstr+=' <tr class="input_table r'+i+'">';
         for(var k = 0;k < ncols; k++){
             if (k==0 && i==0){
-                tempstr+='  <td class="input_table r'+i+' c'+k+'">';
+                tempstr+='  <th class="input_table r'+i+' c'+k+'">';
                 tempstr+='<button class="lock_btn" onclick="lock_labels(\\\''+ID+'\\\')">';
-                tempstr+='Lock Column and Row Labels</button></td>';
+                tempstr+='Lock Column and Row Labels</button></th>';
             }
             if (k==0 && i>0){
-                tempstr+='<td class="input_table r'+i+' c'+k+'">';
+                tempstr+='<th class="input_table r'+i+' c'+k+'">';
                 tempstr+='<input class="'+labelClass+'" type="text" size="7" value="'+(i-1)+'"';
-                tempstr+=' style="font-weight:bold;"';
-                tempstr+=' onblur="record_input(this)"></input></td>';
+                tempstr+=' onblur="record_input(this)"></input></th>';
             }
             if (i==0 && k>0){
-                tempstr+='<td class="input_table r'+i+' c'+k+'">';
+                tempstr+='<th class="input_table r'+i+' c'+k+'">';
                 tempstr+='<input class="'+labelClass+'" type="text" size="15" value="Col_'+(k-1)+'"';
-                tempstr+=' style="font-weight:bold;"';
-                tempstr+=' onblur="record_input(this)"></input></td>';
+                tempstr+=' onblur="record_input(this)"></input></th>';
             }
             if (k>0 && i>0){
                 tempstr+='  <td class="input_table r'+i+' c'+k+'">';
