@@ -322,22 +322,31 @@ var table_data_to_named_DF = '('+function (){
     var parentTable = document.getElementById(info);
     var rows = parentTable.querySelectorAll('tr');
     var nrows = rows.length;
-    var ncols = rows[0].querySelectorAll('td').length;
+    var ncols = rows[0].querySelectorAll('th').length;
     var colnames = [];
     var escnamestr = []
     var data = [];
     //sort data into columns
     for(var i=1;i<ncols;i++){
         var classstr='.c'+i
-        colnames[i-1]=rows[0].querySelectorAll(".table_label")[0].innerHTML;
+        colnames[i-1]=rows[0].querySelector(classstr).querySelector(".table_label").innerHTML;
         escnamestr[i-1] = colnames[i-1].replace(' ','_').replace('(','_').replace(')','_').replace('/','_').replace('*','_');
         var tempcol =[];
         for (var k=1;k<nrows;k++){
             classstr = '.r'+k+'.c'+i;
-            tempcol[k-1] = rows[k].querySelectorAll(".data_cell")[0].innerHTML;
+            tempcol[k-1] = rows[k].querySelector(classstr).querySelector(".data_cell").innerHTML;
         }
         data[i-1]=tempcol;
     }
+    //get indexes if they are not just numeric
+    use_indexes = false;
+    var indexes = [];
+    for (var i = 1; i < nrows;i++){
+        var classstr = '.r'+i+' .c0';
+        indexes[i-1] = parentTable.querySelector(classstr).querySelector(".table_label").innerHTML;
+        if (indexes[i-1] != (i-1)){use_indexes = true;}
+    }
+    
     // Generate non-coder readable python code to put data into a DataFrame.
     var pythoncode = "";
     var dataframe_param = "{\""+colnames[0]+"\":"+escnamestr[0]+",\n";
@@ -346,6 +355,13 @@ var table_data_to_named_DF = '('+function (){
         if (i>0){dataframe_param +="    \""+colnames[i]+"\":"+escnamestr[i]+",\n";}
     }
     dataframe_param +="    }"
+    if (use_indexes){
+        dataframe_param +=", index = [";
+        for (var i = 0; i < indexes.length;i++){
+            dataframe_param += "\""+indexes[i]+"\", ";
+        }
+        dataframe_param += "]";
+    }
     pythoncode += 'try: # Wrapping assigment in `try:...except:` allows us to check if Pandas is available.\n';
     pythoncode += '    '+values[0]+ "= pd.DataFrame("+dataframe_param+")\n";
     pythoncode += 'except NameError as e:\n';
