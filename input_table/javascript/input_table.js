@@ -329,12 +329,12 @@ var table_data_to_named_DF = '('+function (){
     //sort data into columns
     for(var i=1;i<ncols;i++){
         var classstr='.c'+i
-        colnames[i-1]=rows[0].querySelectorAll(classstr)[0].querySelectorAll(".table_label")[0].innerHTML;
+        colnames[i-1]=rows[0].querySelectorAll(".table_label")[0].innerHTML;
         escnamestr[i-1] = colnames[i-1].replace(' ','_').replace('(','_').replace(')','_').replace('/','_').replace('*','_');
         var tempcol =[];
         for (var k=1;k<nrows;k++){
             classstr = '.r'+k+'.c'+i;
-            tempcol[k-1] = rows[k].querySelectorAll(classstr)[0].querySelectorAll(".data_cell")[0].innerHTML;
+            tempcol[k-1] = rows[k].querySelectorAll(".data_cell")[0].innerHTML;
         }
         data[i-1]=tempcol;
     }
