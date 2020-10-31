@@ -1,5 +1,6 @@
 //Javascript for input_table to use in Jupyter notebook
 //Jonathan Gutow <gutow@uwosh.edu> March 24, 2019
+// updates: October 31, 2020
 //license GPL V3 or greater.
 
 //Get input table dimensions and build
@@ -239,7 +240,7 @@ function save_input_table(tableID){
  * @param post_processor a function definition to be called by the do-it button (see example later in this comment).
  * @param instructions a string providing general instructions for the user or at minimum a dialog title.
  * @param fields a list of strings that will be used as the titles for the fields. The length of this list
- *               determines how many input fileds the dialog will containe (1 per line).
+ *               determines how many input fields the dialog will contain (1 per line).
  *
  * post_processor function must be based on the following skeleton. Replace <...> with appropriate variables or
  *  strings.
@@ -267,7 +268,7 @@ function input_dialog(dialogid, post_processor, post_pr_info, instructions,field
     var tempdialog = document.createElement('div');
     stylestr = 'position:fixed;left:20%;';
     stylestr+='top:25%;width:60%;z-index:99;background-color:navajowhite;opacity:100%!important;';
-    stylestr+='border-style:solid!important;border:thick;border-color:red;';
+    stylestr+='border-style:solid!imprortant;border:thick;border-color:red;';
     tempdialog.setAttribute('style',stylestr);
     tempdialog.setAttribute('id',dialogid);
     if (instructions!=''){
@@ -335,6 +336,13 @@ var table_data_to_named_DF = '('+function (){
         for (var k=1;k<nrows;k++){
             classstr = '.r'+k+'.c'+i;
             tempcol[k-1] = rows[k].querySelector(classstr).querySelector(".data_cell").innerHTML;
+            if (tempcol[k-1]==''){
+                tempcol[k-1]='\'\'';
+            }
+            alphare = /[a-zA-Z]/
+            if (alphare.test(tempcol[k-1])){
+                tempcol[k-1]='\''+tempcol[k-1]+'\'';
+            }
         }
         data[i-1]=tempcol;
     }
