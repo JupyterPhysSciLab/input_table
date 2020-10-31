@@ -5,7 +5,7 @@ with open("README.md", "r") as f:
 
 setuptools.setup(
     name="jupyter-datainputtable",
-    version="0.6.2",
+    version="0.7.0rc0",
     description="Predefined data input tables for Jupyter notebooks",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -19,7 +19,7 @@ setuptools.setup(
     install_requires=[
         # 'python>=3.6',
         'jupyter>=1.0.0',
-        #'pandas>=0.22.0'
+        # 'pandas>=0.22.0'
     ],
     classifiers=[
         'Development Status :: 4 - Beta',

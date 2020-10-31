@@ -16,7 +16,8 @@ undeletable.
 * Table creation code will work without this package installed in the Jupyter
 kernel. Tables are viewable, but not editable in a plain vanilla Jupyter install.
 * Option to create Pandas DataFrame from the table if Pandas imported as `pd`.
-If user tries without Pandas an explanation is provided.
+If user tries without Pandas an explanation is provided. Versions >=0.7.0
+ properly handle cells that are empty or contain text.
 
 **Wishlist:**
 
