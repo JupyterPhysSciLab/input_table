@@ -331,9 +331,10 @@ var table_data_to_named_DF = '('+function (){
     for(var i=1;i<ncols;i++){
         var classstr='.c'+i
         colnames[i-1]=rows[0].querySelector(classstr).querySelector(".table_label").innerHTML;
-        escnamestr[i-1] = colnames[i-1].replace(' ','_').replace('(','_')
-        .replace(')','_').replace('/','_').replace('*','_').replace('+','_')
-        .replace('-','_').replace('^','_').replace('$','')
+        escnamestr[i-1] = colnames[i-1].replaceAll(' ','_').replaceAll('(','_')
+        .replaceAll(')','_').replaceAll('/','_').replaceAll('*','_').replaceAll('+','_')
+        .replaceAll('-','_').replaceAll('^','_').replaceAll('$','')
+        .replaceAll('{','_').replaceAll('}','_')
         var tempcol =[];
         for (var k=1;k<nrows;k++){
             classstr = '.r'+k+'.c'+i;
