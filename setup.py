@@ -19,7 +19,8 @@ setuptools.setup(
     install_requires=[
         # 'python>=3.6',
         'jupyter>=1.0.0',
-        # 'pandas>=0.22.0'
+        'pandas>=1.0.0',
+        'numpy>=1.19.0',
     ],
     classifiers=[
         'Development Status :: 4 - Beta',
