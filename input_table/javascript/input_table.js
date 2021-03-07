@@ -331,18 +331,25 @@ var table_data_to_named_DF = '('+function (){
     for(var i=1;i<ncols;i++){
         var classstr='.c'+i
         colnames[i-1]=rows[0].querySelector(classstr).querySelector(".table_label").innerHTML;
-        escnamestr[i-1] = colnames[i-1].replace(' ','_').replace('(','_').replace(')','_').replace('/','_').replace('*','_');
+        escnamestr[i-1] = colnames[i-1].replace(' ','_').replace('(','_')
+        .replace(')','_').replace('/','_').replace('*','_').replace('+','_')
+        .replace('-','_').replace('^','_').replace('$','')
         var tempcol =[];
         for (var k=1;k<nrows;k++){
             classstr = '.r'+k+'.c'+i;
             tempcol[k-1] = rows[k].querySelector(classstr).querySelector(".data_cell").innerHTML;
-            if (tempcol[k-1]==''){
-                tempcol[k-1]='\'\'';
-            }
             alphare = /[a-zA-Z]/
             if (alphare.test(tempcol[k-1])){
                 tempcol[k-1]='\''+tempcol[k-1]+'\'';
             }
+            if (tempcol[k-1]==''){
+                tempcol[k-1]='np.nan';
+            }
+            nanre = /nan/i
+            if(nanre.test(tempcol[k-1])){
+                tempcol[k-1]='np.nan';
+            }
+
         }
         data[i-1]=tempcol;
     }
