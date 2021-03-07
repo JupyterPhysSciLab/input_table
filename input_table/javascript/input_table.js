@@ -345,7 +345,7 @@ var table_data_to_named_DF = '('+function (){
             if (tempcol[k-1]==''){
                 tempcol[k-1]='np.nan';
             }
-            nanre = /nan/i
+            nanre = /np\.nan/i
             if(nanre.test(tempcol[k-1])){
                 tempcol[k-1]='np.nan';
             }
