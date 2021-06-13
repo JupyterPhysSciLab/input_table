@@ -12,6 +12,13 @@ import os
 #Locate input_table package directory
 mydir=os.path.dirname(__file__) #absolute path to directory containing this file.
 
+#load the supporting css
+tempcssfile = open(os.path.join(mydir,'css','input_table.css'))
+tempstyle = '<style type="text/css">'
+tempstyle += tempcssfile.read()+'</script>'
+tempcssfile.close()
+display(HTML(tempstyle))
+
 #load the supporting javascript
 tempJSfile=open(os.path.join(mydir,'javascript','input_table.js'))
 tempscript='<script type="text/javascript">'

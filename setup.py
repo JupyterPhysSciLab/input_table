@@ -14,7 +14,7 @@ setuptools.setup(
     author_email="jgutow@new.rr.com",
     license="GPL-3.0+",
     packages=setuptools.find_packages(),
-    package_data={'input_table': ['javascript/*.js']},
+    package_data={'input_table': ['javascript/*.js','css/*.css']},
     include_package_data=True,
     install_requires=[
         # 'python>=3.6',
