@@ -1,12 +1,16 @@
-**jupyter-datainputtable**
-
+## jupyter-datainputtable
+[Introduction](#introduction) | [Current Features](#current-features) | 
+[Wishlist](#wishlist) | [Usage](#usage) | [Installation](#installation) | 
+[Issues or comments](#issues-or-comments) | 
+[License](#this-software-is-distributed-under-the-gnu-v3-license)
+#### Introduction:
 Tools for generating predefined data input tables for use in Jupyter notebooks.
 This is primarily for student worksheets.
 
-**Current Features:**
+#### Current Features:
 
 * Can create a table using a python command in the Jupyter notebook.
-* If using JupyterPhysSciLab/JupyterPiDAQ or JupyterPhysSciLab/InstructorTools tables can be
+* If using JupyterPhysSciLab/InstructorTools tables can be
 created using menu items in the Jupyter notebook (recommended usage).
 * Table column and row labels can be locked once set.
 * Number of rows and columns must be chosen on initial creation.
@@ -19,11 +23,27 @@ kernel. Tables are viewable, but not editable in a plain vanilla Jupyter install
 If user tries without Pandas an explanation is provided. Versions >=0.7.0
  properly handle cells that are empty or contain text.
 
-**Wishlist:**
+#### Wishlist:
 
 * Add rows to existing table.
 
-**Installation**
+#### Usage:
+If you are using and have initialized the JupyterPhysSciLab/InstructorTools
+select the "insert table..." item from the menu. This will initiate the table
+creation process with a dialogbox.
+
+If you are not using the InstructorTools package, but the package 
+`jupyter_datainputtable` is installed in your Jupyter/Python 
+environment start by importing it:
+```
+from input_table import *
+```
+You initiate the table creation process with the command:
+```
+create_input_table()
+```
+
+#### Installation
 
 Installation using pip into a virtual environment is recommended.
 
@@ -63,6 +83,33 @@ _Development_
 Simply replace `$ pip install jupyter-datainputtable` with `$ pip install -e jupyter-datainputtable` in the _Production_
 instructions.
 
-**Issues or comments**
+#### Change Log
+
+* 0.7.2 
+  * Ability to have a table caption.
+  * Created a file for future custom css.
+  * Expansion and cleanup of README.md.  
+* 0.7.1 Bug fixes.
+* 0.7.0
+  * Better handling of empty, string and NaN cells.
+  * Set Pandas indexes if row labels are not just numeric indexes.  
+* 0.6.0
+  * Added dialog for getting initial table dimensions.
+  * Added export table data to a Pandas DataFrame table action.
+  * Bug fixes.  
+* 0.5.0 Initial beta release
+#### Issues or comments:
 
 [JupyterPhysSciLab/jupyter-datainputtable](https://github.com/JupyterPhysSciLab/jupyter-datainputtable)
+
+##### [This software is distributed under the GNU V3 license](https://gnu.org/licenses)
+This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+Copyright - Jonathan Gutow, 2020, 2021.
