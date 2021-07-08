@@ -22,7 +22,8 @@ function get_table_dim(){
 //    </div>`
 
     var instructions = "Set table size remembering to include enough rows and columns for labels.";
-    var fields = ["Number of Rows", "Number of Columns"];
+    var fields = ["Table Title (caption)","Number of Rows",
+    "Number of Columns"];
     input_dialog("input_table_dim_dlg", create_table,"not used", instructions,fields);
     //currentcell.set_text('display(HTML("""'+htmlstr+'"""))');
     //currentcell.execute();
@@ -101,6 +102,17 @@ function lock_labels(tableID){
     lockbtn.replaceWith(tempelem);
     save_input_table(tableID);
 }
+
+function input_table_prestr(){
+    var prestr='# If no data table appears in the output of this cell, run the cell to display the table.\n\n';
+    prestr+='try:\n';
+    prestr+='    from input_table import *\n';
+    prestr+='except (ImportError, FileNotFoundError) as e:\n';
+    prestr+='    from IPython.display import HTML\n';
+    prestr+='    print("Table editing will not work because `jupyter_datainputtable` module is not installed in python kernel")\n';
+    return prestr
+}
+
 //Create the table using the info collected in the dimension table.
 var create_table = '('+function (){
 /*
@@ -109,8 +121,9 @@ var create_table = '('+function (){
 */
     var dialog = document.getElementById("input_table_dim_dlg");
     var inputs = dialog.querySelectorAll("input");
-    var nrows = inputs[0].value;
-    var ncols = inputs[1].value;
+    var caption = inputs[0].value;
+    var nrows = inputs[1].value;
+    var ncols = inputs[2].value;
     var info = dialog.querySelectorAll("#post_pr_info")[0].innerHTML;
     dialog.remove();
     //alert(nrows+', '+ncols)
@@ -118,13 +131,9 @@ var create_table = '('+function (){
     var ID = "it_"+(Math.round(d.getTime()));
     var labelClass = "table_label";
     var dataCellClass="data_cell";
-    var prestr='# If no data table appears in the output of this cell, run the cell to display the table.\n\n';
-    prestr+='try:\n';
-    prestr+='    from input_table import *\n';
-    prestr+='except (ImportError, FileNotFoundError) as e:\n';
-    prestr+='    from IPython.display import HTML\n';
-    prestr+='    print("Table editing will not work because `jupyter_datainputtable` module is not installed in python kernel")\n';
-    var tempstr='<table class="input_table" id="'+ID+'"><tbody>';
+    var prestr = input_table_prestr();
+    var tempstr='<table class="input_table" id="'+ID+'">';
+    tempstr += '<caption>'+caption+'</caption><tbody>';
     for(var i = 0; i < nrows; i++){
         tempstr+=' <tr class="input_table r'+i+'">';
         for(var k = 0;k < ncols; k++){
@@ -215,12 +224,7 @@ function save_input_table(tableID){
         table.querySelector('.save_btn').replaceWith(table_menu(tableID));
     }
     var tablecnt = table.innerHTML;
-    var tablestr='# If no data table appears in the output of this cell, run the cell to display the table.\n';
-    tablestr+='try:\n';
-    tablestr+='    from input_table import *\n';
-    tablestr+='except (ImportError, FileNotFoundError) as e:\n';
-    tablestr+='    from IPython.display import HTML\n';
-    tablestr+='    print("Table editing will not work because `jupyter_datainputtable` module is not installed in python kernel")\n';
+    var tablestr= input_table_prestr();
     tablestr+='display(HTML(\'';
     tablestr+='<table class="input_table" id="'+tableID+'">';
     var re=/\n/g;
@@ -403,5 +407,24 @@ function data_table_to_Pandas(tableID){
     var instructions = "Provide a one-word name for the Pandas DataFrame:";
     var fields = ["Name"];
     input_dialog("DFName_dia", table_data_to_named_DF, tableID, instructions,fields);
+
+}
+
+function csv_to_data_table(csv){
+/**
+* @param csv comma separated string of values each row ending with a '\n'.
+*   First row and column interpreted as headers.
+*
+*   This creates the code to put into a Jupyter code cell to create the table
+*   and then executes the cell. This is very similar to create_table, but
+*   including values in the cells.
+**/
+    var prestr = input_table_prestr()
+    var d = new Date();
+    var ID = "it_"+(Math.round(d.getTime()));
+    var labelClass = "table_label";
+    var dataCellClass="data_cell";
+    var menu = table_menu(ID);
+//TODO: Complete csv to data table JS?
 
 }

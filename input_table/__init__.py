@@ -15,7 +15,7 @@ mydir=os.path.dirname(__file__) #absolute path to directory containing this file
 #load the supporting css
 tempcssfile = open(os.path.join(mydir,'css','input_table.css'))
 tempstyle = '<style type="text/css">'
-tempstyle += tempcssfile.read()+'</script>'
+tempstyle += tempcssfile.read()+'</style>'
 tempcssfile.close()
 display(HTML(tempstyle))
 
