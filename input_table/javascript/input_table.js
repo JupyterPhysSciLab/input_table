@@ -272,7 +272,7 @@ function input_dialog(dialogid, post_processor, post_pr_info, instructions,field
     var tempdialog = document.createElement('div');
     stylestr = 'position:fixed;left:20%;';
     stylestr+='top:25%;width:60%;z-index:99;background-color:navajowhite;opacity:100%!important;';
-    stylestr+='border-style:solid!imprortant;border:thick;border-color:red;';
+    stylestr+='border-style:solid!important;border:thick;border-color:red;';
     tempdialog.setAttribute('style',stylestr);
     tempdialog.setAttribute('id',dialogid);
     if (instructions!=''){
