@@ -15,13 +15,11 @@ created using menu items in the Jupyter notebook (recommended usage).
 * Table column and row labels can be locked once set.
 * Number of rows and columns must be chosen on initial creation.
 * Table will survive deletion of all cell output data.
-* Default setting is to make the code cell that creates the table uneditable and
-undeletable.
+* Default setting is to protect the code cell that creates the table. This 
+  blocks editing and deleting.
 * Table creation code will work without this package installed in the Jupyter
 kernel. Tables are viewable, but not editable in a plain vanilla Jupyter install.
-* Option to create Pandas DataFrame from the table if Pandas imported as `pd`.
-If user tries without Pandas an explanation is provided. Versions >=0.7.0
- properly handle cells that are empty or contain text.
+* Menu option to create a Pandas DataFrame from the table.
 
 #### Wishlist:
 
@@ -36,11 +34,11 @@ If you are not using the InstructorTools package, but the package
 `jupyter_datainputtable` is installed in your Jupyter/Python 
 environment start by importing it:
 ```
-from input_table import *
+import input_table
 ```
 You initiate the table creation process with the command:
 ```
-create_input_table()
+input_table.create_input_table()
 ```
 
 #### Installation
@@ -65,8 +63,9 @@ available in your command shell. More discussion:
 `$ jupyter notebook`. Jupyter should launch in your browser.
         1. Open a new notebook using the default (Python 3) kernel.
         1. In the first cell import the input_table module:
-            `from input_table import *`
-        1. To try use the command `create_input_table()` in the next cell. This should generate a blank code cell
+            `import input_table`
+        1. To try use the command `input_table.create_input_table()` in the 
+           next cell. This should generate a blank code cell
         and another code cell that has a table in the output for you to define your table dimensions.
         1. If you define the dimensions the input table will be created for you.
         
@@ -80,11 +79,17 @@ available in your command shell. More discussion:
     
 _Development_
 
-Simply replace `$ pip install jupyter-datainputtable` with `$ pip install -e jupyter-datainputtable` in the _Production_
+Simply replace `$ pip install jupyter-datainputtable` with `$ pip install 
+-e ../jupyter-datainputtable` in the _Production_
 instructions.
 
 #### Change Log
 
+* 0.7.3
+  * Use jQuery style dialogs.
+  * When creating Pandas DataFrame from a table import numpy and Pandas 
+    only if necessary.
+  * README updates.  
 * 0.7.2 
   * Ability to have a table caption.
   * Created a file for future custom css.

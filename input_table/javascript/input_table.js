@@ -1,6 +1,6 @@
 //Javascript for input_table to use in Jupyter notebook
 //Jonathan Gutow <gutow@uwosh.edu> March 24, 2019
-// updates: October 31, 2020
+// updates: October 31, 2020, July 2021
 //license GPL V3 or greater.
 
 //Get input table dimensions and build
@@ -140,10 +140,10 @@ function lock_labels(tableID){
 
 function input_table_prestr(){
     var prestr='# If no data table appears in the output of this cell, run the cell to display the table.\n\n';
+    prestr+='from IPython.display import HTML\n';
     prestr+='try:\n';
-    prestr+='    from input_table import *\n';
+    prestr+='    import input_table\n';
     prestr+='except (ImportError, FileNotFoundError) as e:\n';
-    prestr+='    from IPython.display import HTML\n';
     prestr+='    print("Table editing will not work because `jupyter_datainputtable` module is not installed in python kernel")\n';
     return prestr
 }
@@ -354,7 +354,7 @@ function checkfornumpy_startTblToDF(tableID, DFname){
     Jupyter.notebook.insert_cell_below();
     Jupyter.notebook.select_next(true);
     Jupyter.notebook.focus_cell();
-    var execstr = '"'+tableID+'","'+DFname+'",str(JPSLUtils.havenp())';
+    var execstr = '"'+tableID+'","'+DFname+'",str(input_table.JPSLUtils.havenp())';
     //alert('checkfornumpy_startTblToDF: '+execstr);
     JPSLUtils.executePython(execstr).then(result => fixnp_checkpd(result));
 }
@@ -373,7 +373,7 @@ function fixnp_checkpd(result){
         var templine = 'import numpy as np # numpy not imported previously.';
         JPSLUtils.insert_text_at_beginning_of_current_cell(templine);
     }
-    var execstr = '"'+results[0]+'","'+results[1]+'",str(JPSLUtils.havepd())';
+    var execstr = '"'+results[0]+'","'+results[1]+'",str(input_table.JPSLUtils.havepd())';
     //alert('fixnp_checkpd: '+execstr);
     JPSLUtils.executePython(execstr).then(result => fixpd_makeDF(result));
 }

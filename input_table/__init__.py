@@ -35,4 +35,4 @@ def create_input_table():
     function it will add an extra blank cell before the cell in which the table is created. This does
     not occur when doing things in javascript.
     """
-    display(JS('get_table_dim();'))
+    JPSLUtils.OTJS('get_table_dim();')
