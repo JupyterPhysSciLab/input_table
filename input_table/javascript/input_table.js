@@ -4,7 +4,7 @@
 //license GPL V3 or greater.
 
 //Get input table dimensions and build
-function get_table_dim(){
+function get_table_dim_old(){
     Jupyter.notebook.insert_cell_below();
     Jupyter.notebook.select_next(true);
     Jupyter.notebook.focus_cell();
@@ -27,6 +27,46 @@ function get_table_dim(){
     input_dialog("input_table_dim_dlg", create_table,"not used", instructions,fields);
     //currentcell.set_text('display(HTML("""'+htmlstr+'"""))');
     //currentcell.execute();
+}
+
+function get_table_dim(){
+    Jupyter.notebook.insert_cell_below();
+    Jupyter.notebook.select_next(true);
+    Jupyter.notebook.focus_cell();
+    var currentcell = Jupyter.notebook.get_selected_cell();
+    var instructions = "Set table size remembering to include enough rows and columns for labels.";
+    var fields = ["Table Title (caption)","Number of Rows",
+    "Number of Columns"];
+    var fieldlen = [40, 15, 15]
+    var tempdialog = document.createElement('div');
+    tempdialog.setAttribute('id',"input_table_dim_dlg");
+    var tempinstr = document.createElement('H4');
+    tempinstr.setAttribute('style','text-align:center;');
+    tempinstr.innerHTML = instructions;
+    tempdialog.append(tempinstr);
+    for (var i = 0; i < fieldlen.length;i++){
+        var templine=document.createElement('div');
+        var inputstr = fields[i]+': ';
+        inputstr +='<input type="text" size="'+fieldlen[i]+'" value="" ';
+        inputstr += 'onblur="record_input(this)"></input>';
+        templine.innerHTML=inputstr;
+        templine.setAttribute('style','text-align:center;');
+        tempdialog.append(templine);
+    }
+    $(tempdialog).dialog({modal:true, width:400,
+                  close: function(){$(this).dialog('destroy')},
+                  buttons:[
+                  {text: 'Cancel',
+                  click: function(){$(this).dialog('destroy')}},
+                  {text: 'OK/Do It',
+                  click: function(){create_table();
+                                    $(this).dialog('destroy')}}
+                  ]
+    })
+    Jupyter.notebook.focus_cell();//Make sure keyboard manager doesn't grab inputs.
+    Jupyter.notebook.keyboard_manager.enabled=false;
+    tempdialog.focus();
+    Jupyter.notebook.keyboard_manager.enabled=false; //Make sure keyboard manager doesn't grab inputs.
 }
 
 //Update html on change of cell content.
@@ -93,11 +133,6 @@ function lock_labels(tableID){
         input_element_to_fixed(labelinputs[i]);
     }
     var lockbtn = parentTable.querySelector('.lock_btn');
-    //var tempelem = document.createElement('button');
-    //tempelem.classList.add('save_btn');
-    //var onclickstr = "save_input_table('"+tableID+"')"
-    //tempelem.setAttribute('onclick',onclickstr);
-    //tempelem.innerHTML='Save Updates';
     var tempelem = table_menu(tableID);
     lockbtn.replaceWith(tempelem);
     save_input_table(tableID);
@@ -114,7 +149,7 @@ function input_table_prestr(){
 }
 
 //Create the table using the info collected in the dimension table.
-var create_table = '('+function (){
+var create_table = function (){
 /*
     var nrows = document.getElementById("init_row_dim").value;
     var ncols = document.getElementById("init_col_dim").value;
@@ -124,8 +159,6 @@ var create_table = '('+function (){
     var caption = inputs[0].value;
     var nrows = inputs[1].value;
     var ncols = inputs[2].value;
-    var info = dialog.querySelectorAll("#post_pr_info")[0].innerHTML;
-    dialog.remove();
     //alert(nrows+', '+ncols)
     var d = new Date();
     var ID = "it_"+(Math.round(d.getTime()));
@@ -167,7 +200,7 @@ var create_table = '('+function (){
     // what they are doing.
     currentcell.metadata.editable=false;
     currentcell.execute();
-}+')();';
+};
 
 //Utility function that is not used because the Jupyter notebook cell indexing is maintained
 // independently of the DOM.
@@ -313,18 +346,55 @@ function input_dialog(dialogid, post_processor, post_pr_info, instructions,field
     Jupyter.notebook.keyboard_manager.enabled=false; //Make sure keyboard manager doesn't grab inputs.
 }
 
-var table_data_to_named_DF = '('+function (){
-     var dialog = document.getElementById("DFName_dia");
-     var inputs = dialog.querySelectorAll('input');
-     var values = [];
-     for (var i=0;i<inputs.length;i++){
-         values[i]=inputs[i].value;
-     }
-     info = dialog.querySelectorAll('#post_pr_info')[0].innerHTML;
-     dialog.remove();
+function checkfornumpy_startTblToDF(tableID, DFname){
+    //tableID is to be passed on to later functions in this chain
+    var parentTable = document.getElementById(tableID);
+    //Make sure the cell containing the table is selected by Jupyter.
+    JPSLUtils.select_containing_cell(parentTable);
+    Jupyter.notebook.insert_cell_below();
+    Jupyter.notebook.select_next(true);
+    Jupyter.notebook.focus_cell();
+    var execstr = '"'+tableID+'","'+DFname+'",str(JPSLUtils.havenp())';
+    //alert('checkfornumpy_startTblToDF: '+execstr);
+    JPSLUtils.executePython(execstr).then(result => fixnp_checkpd(result));
+}
+
+function fixnp_checkpd(result){
+    // result is comma separate list from the last execution element 0 should
+    // be the tableID and element 1 should be the results of havenp().
+    var results = result.split(' ');
+    //alert(results)
+    //Make sure proper cell is selected.
+    var parentTable = document.getElementById(results[0]);
+    JPSLUtils.select_containing_cell(parentTable);
+    Jupyter.notebook.select_next(true);
+    Jupyter.notebook.focus_cell();
+    if (results[2]!='True'){
+        var templine = 'import numpy as np # numpy not imported previously.';
+        JPSLUtils.insert_text_at_beginning_of_current_cell(templine);
+    }
+    var execstr = '"'+results[0]+'","'+results[1]+'",str(JPSLUtils.havepd())';
+    //alert('fixnp_checkpd: '+execstr);
+    JPSLUtils.executePython(execstr).then(result => fixpd_makeDF(result));
+}
+
+function fixpd_makeDF(result){
+    // result is comma separate list from the last execution element 0 should
+    // be the tableID and element 1 should be the results of havenp().
+    var results = result.split(' ');
+    //Make sure proper cell is selected.
+    var parentTable = document.getElementById(results[0]);
+    JPSLUtils.select_containing_cell(parentTable);
+    Jupyter.notebook.select_next(true);
+    Jupyter.notebook.focus_cell();
+    if (results[2]!='True'){
+        var templine = 'import pandas as pd # pandas not imported previously.';
+        JPSLUtils.insert_newline_at_end_of_current_cell(templine);
+    }
+     //info = dialog.querySelectorAll('#post_pr_info')[0].innerHTML;
+     //dialog.remove();
  //    <code to use the items in values and post_pr_info> //order of items is
  //    the same as the fields list.
-    var parentTable = document.getElementById(info);
     var rows = parentTable.querySelectorAll('tr');
     var nrows = rows.length;
     var ncols = rows[0].querySelectorAll('th').length;
@@ -338,7 +408,7 @@ var table_data_to_named_DF = '('+function (){
         escnamestr[i-1] = colnames[i-1].replaceAll(' ','_').replaceAll('(','_')
         .replaceAll(')','_').replaceAll('/','_').replaceAll('*','_').replaceAll('+','_')
         .replaceAll('-','_').replaceAll('^','_').replaceAll('$','')
-        .replaceAll('{','_').replaceAll('}','_')
+        .replaceAll('{','_').replaceAll('}','_');
         var tempcol =[];
         for (var k=1;k<nrows;k++){
             classstr = '.r'+k+'.c'+i;
@@ -366,8 +436,6 @@ var table_data_to_named_DF = '('+function (){
         indexes[i-1] = parentTable.querySelector(classstr).querySelector(".table_label").innerHTML;
         if (indexes[i-1] != (i-1)){use_indexes = true;}
     }
-    
-    // Generate non-coder readable python code to put data into a DataFrame.
     var pythoncode = "";
     var dataframe_param = "{\""+colnames[0]+"\":"+escnamestr[0]+",\n";
     for (var i=0;i<(ncols-1);i++){
@@ -382,32 +450,59 @@ var table_data_to_named_DF = '('+function (){
         }
         dataframe_param += "]";
     }
-    pythoncode += 'try: # Wrapping assigment in `try:...except:` allows us to check if Pandas is available.\n';
-    pythoncode += '    '+values[0]+ "= pd.DataFrame("+dataframe_param+")\n";
-    pythoncode += 'except NameError as e:\n';
-    pythoncode += '    print("Sorry, Pandas needs to be imported using the statement `import pandas as pd` first.")\n';
-    pythoncode += '    '+values[0]+' = "undefined"\n';
-    pythoncode += "print('DataFrame `"+values[0]+"`:')\n";
-    pythoncode += values[0];
+    pythoncode += results[1]+ "= pd.DataFrame("+dataframe_param+")\n";
+    pythoncode += "print('DataFrame `"+results[1]+"`:')\n";
+    pythoncode += results[1];
 
 
-    // Insert a cell below the cell containing the table. Load with Python code that is non-coder readable.
-    // Run the cell to create the DataFrame.
-    select_containing_cell(parentTable); //Make sure the cell containing the table is selected by Jupyter.
-    Jupyter.notebook.insert_cell_below();
+    // Insert code into cell. Load with Python code that is non-coder readable.
+    //Make sure the proper cell is still selected.
+    JPSLUtils.select_containing_cell(parentTable);
     Jupyter.notebook.select_next(true);
     Jupyter.notebook.focus_cell();
-    var currentcell = Jupyter.notebook.get_selected_cell();
-    currentcell.set_text(pythoncode);
-    currentcell.execute();
- }+')();';
+
+    // Run the cell to create the DataFrame.
+    JPSLUtils.insert_newline_at_end_of_current_cell(pythoncode);
+   Jupyter.notebook.get_selected_cell().execute();
+ }
+
 
 function data_table_to_Pandas(tableID){
     // Use dialog to get user choice for name of the DataFrame. Assumes Pandas import as `pd`.
     var instructions = "Provide a one-word name for the Pandas DataFrame:";
     var fields = ["Name"];
-    input_dialog("DFName_dia", table_data_to_named_DF, tableID, instructions,fields);
-
+    var fieldlen = [30];
+    //input_dialog("DFName_dia", table_data_to_named_DF, tableID, instructions,fields);
+    var tempdialog = document.createElement('div');
+    tempdialog.setAttribute('id',"DFName_dia");
+    var tempinstr = document.createElement('H4');
+    tempinstr.setAttribute('style','text-align:center;');
+    tempinstr.innerHTML = instructions;
+    tempdialog.append(tempinstr);
+    for (var i = 0; i < fieldlen.length;i++){
+        var templine=document.createElement('div');
+        var inputstr = fields[i]+': ';
+        inputstr +='<input type="text" size="'+fieldlen[i]+'" value="" ';
+        inputstr += 'onblur="record_input(this)"></input>';
+        templine.innerHTML=inputstr;
+        templine.setAttribute('style','text-align:center;');
+        tempdialog.append(templine);
+    }
+    $(tempdialog).dialog({modal:true,
+                  close: function(){$(this).dialog('destroy')},
+                  buttons:[
+                  {text: 'Cancel',
+                  click: function(){$(this).dialog('destroy')}},
+                  {text: 'OK/Do It',
+                  click: function(){var DFname = tempdialog.querySelector('input').value;
+                                   checkfornumpy_startTblToDF(tableID, DFname);
+                                   $(this).dialog('destroy');}}
+                  ]
+    })
+    Jupyter.notebook.focus_cell();//Make sure keyboard manager doesn't grab inputs.
+    Jupyter.notebook.keyboard_manager.enabled=false;
+    tempdialog.focus();
+    Jupyter.notebook.keyboard_manager.enabled=false; //Make sure keyboard manager doesn't grab inputs.
 }
 
 function csv_to_data_table(csv){

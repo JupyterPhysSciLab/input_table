@@ -5,7 +5,8 @@ name = "input_table"
 # license GPL V3 or greater
 
 from IPython.display import HTML
-from IPython.display import Javascript as JS 
+from IPython.display import Javascript as JS
+import JPSLUtils
 
 import os
 
