@@ -380,7 +380,7 @@ function fixnp_checkpd(result){
 
 function fixpd_makeDF(result){
     // result is comma separate list from the last execution element 0 should
-    // be the tableID and element 1 should be the results of havenp().
+    // be the tableID and element 2 should be the results of havepd().
     var results = result.split(' ');
     //Make sure proper cell is selected.
     var parentTable = document.getElementById(results[0]);
