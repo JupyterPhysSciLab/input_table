@@ -166,7 +166,8 @@ var create_table = function (){
     var dataCellClass="data_cell";
     var prestr = input_table_prestr();
     var tempstr='<table class="input_table" id="'+ID+'">';
-    tempstr += '<caption>'+caption+'</caption><tbody>';
+    tempstr += '<caption  style="font-weight:bold;font-size:1.5em;'
+    tempstr += 'color:darkkhaki">'+caption+'</caption><tbody>';
     for(var i = 0; i < nrows; i++){
         tempstr+=' <tr class="input_table r'+i+'">';
         for(var k = 0;k < ncols; k++){

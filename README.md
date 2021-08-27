@@ -1,7 +1,7 @@
 ## jupyter-datainputtable
 [Introduction](#introduction) | [Current Features](#current-features) | 
 [Wishlist](#wishlist) | [Usage](#usage) | [Installation](#installation) | 
-[Issues or comments](#issues-or-comments) | 
+[Change log](#change-log) | [Issues or comments](#issues-or-comments) | 
 [License](#this-software-is-distributed-under-the-gnu-v3-license)
 #### Introduction:
 Tools for generating predefined data input tables for use in Jupyter notebooks.
@@ -47,6 +47,13 @@ Installation using pip into a virtual environment is recommended.
 
 _Production_
 
+This is best installed by install the pseudo packages
+[JPSLInstructor](https://github.com/JupyterPhysSciLab/JPSLInstructor)
+or
+[JPSLStudent](https://github.com/JupyterPhysSciLab/JPSLStudent).
+
+If you wish to install just this package follow the instructions below.
+
 1. If not installed, install pipenv:`$ pip3 install --user pipenv`. You may
 need to add `~/.local/bin` to your `PATH` to make `pipenv`
 available in your command shell. More discussion: 
@@ -85,6 +92,7 @@ instructions.
 
 #### Change Log
 
+* 0.7.4 Colored and bigger table caption. README updates.
 * 0.7.3
   * Use jQuery style dialogs.
   * When creating Pandas DataFrame from a table import numpy and Pandas 
