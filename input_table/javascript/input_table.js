@@ -200,6 +200,9 @@ var create_table = function (){
     //protect the cell so user cannot edit or delete the code without knowing 
     // what they are doing.
     currentcell.metadata.editable=false;
+    if (!currentcell.metadata.JPSL){
+        currentcell.metadata.JPSL={};}
+    currentcell.metadata.JPSL.input_table_cell=true;
     currentcell.execute();
 };
 
