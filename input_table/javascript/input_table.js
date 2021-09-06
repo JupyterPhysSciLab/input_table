@@ -97,8 +97,7 @@ function input_element_to_fixed(element){
 
 function data_cell_to_input_cell(element){
     var tempelem=document.createElement('input');
-    var tempsize = ''+element.size;
-    if (tempsize==null){tempsize='7'};
+    var tempsize = 4;
     tempelem.setAttribute('size',tempsize);
     var tempid = element.id;
     if (tempid==null){tempid=''};
