@@ -47,7 +47,7 @@ Installation using pip into a virtual environment is recommended.
 
 _Production_
 
-This is best installed by install the pseudo packages
+This is best installed by using the pseudo packages
 [JPSLInstructor](https://github.com/JupyterPhysSciLab/JPSLInstructor)
 or
 [JPSLStudent](https://github.com/JupyterPhysSciLab/JPSLStudent).
