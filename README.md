@@ -92,6 +92,7 @@ instructions.
 
 #### Change Log
 
+* 0.7.6 update requirements to use upstream bug fixes.
 * 0.7.5 smaller input cells, metadata flag identifying cell as containing a 
   data input table.
 * 0.7.4 Colored and bigger table caption. README updates.
