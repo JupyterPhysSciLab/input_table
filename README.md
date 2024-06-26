@@ -1,9 +1,7 @@
-## jupyter-datainputtable
-[Introduction](#introduction) | [Current Features](#current-features) | 
-[Wishlist](#wishlist) | [Usage](#usage) | [Installation](#installation) | 
-[Change log](#change-log) | [Issues or comments](#issues-or-comments) | 
-[License](#this-software-is-distributed-under-the-gnu-v3-license)
-#### Introduction:
+# jupyter_datainputtable
+
+[![Github Actions Status](https://github.com/JupyterPhysSciLab/jupyter-datainputtable/workflows/Build/badge.svg)](https://github.com/JupyterPhysSciLab/jupyter-datainputtable/actions/workflows/build.yml)
+
 Tools for generating predefined data input tables for use in Jupyter notebooks.
 This is primarily for student worksheets.
 
@@ -40,92 +38,94 @@ You initiate the table creation process with the command:
 ```
 input_table.create_input_table()
 ```
+## Requirements
 
-#### Installation
+- JupyterLab >= 4.0.0
 
-Installation using pip into a virtual environment is recommended.
+## Install
 
-_Production_
+To install the extension, execute:
 
-This is best installed by using the pseudo packages
-[JPSLInstructor](https://github.com/JupyterPhysSciLab/JPSLInstructor)
-or
-[JPSLStudent](https://github.com/JupyterPhysSciLab/JPSLStudent).
+```bash
+pip install jupyter_datainputtable
+```
 
-If you wish to install just this package follow the instructions below.
+## Uninstall
 
-1. If not installed, install pipenv:`$ pip3 install --user pipenv`. You may
-need to add `~/.local/bin` to your `PATH` to make `pipenv`
-available in your command shell. More discussion: 
-[The Hitchhiker's Guide to Python](https://docs.python-guide.org/dev/virtualenvs/).
-1. Navigate to the directory where this package will be installed.
-1. Start a shell in the environment `$ pipenv shell`.
-1. Install using pip.
-    1. `$ pip install jupyter-datainputtable`. This will install Jupyter into the same virtual
-    environment if you do not already have it on your machine. If Jupyter is already
-    installed the virtual environment will use the existing installation. This takes
-    a long time on a Raspberry Pi. It will not run on a 3B+ without at least 1 GB of
-    swap. See: [Build Jupyter on a Pi](https://www.uwosh.edu/facstaff/gutow/computer-and-programming-how-tos/installing-jupyter-on-raspberrian).
-    1. Still within the environment shell test this by starting jupyter
-`$ jupyter notebook`. Jupyter should launch in your browser.
-        1. Open a new notebook using the default (Python 3) kernel.
-        1. In the first cell import the input_table module:
-            `import input_table`
-        1. To try use the command `input_table.create_input_table()` in the 
-           next cell. This should generate a blank code cell
-        and another code cell that has a table in the output for you to define your table dimensions.
-        1. If you define the dimensions the input table will be created for you.
-        
-1. _Optional_ You can make this environment available to an alternate Jupyter install as a special kernel when you are the user.
-    1. Make sure you are running in your virtual environment `$ pipenv shell` in the directory for  virtual
-    environment will do that.
-    1. Issue the command to add this as a kernel to your personal space: 
-    `$ python -m ipykernel install --user --name=<name-you-want-for-kernel>`.
-    1. More information is available in the Jupyter/Ipython documentation. A simple tutorial from Nikolai Jankiev
-    (_Parametric Thoughts_) can be found [here](https://janakiev.com/til/jupyter-virtual-envs/). 
-    
-_Development_
+To remove the extension, execute:
 
-Simply replace `$ pip install jupyter-datainputtable` with `$ pip install 
--e ../jupyter-datainputtable` in the _Production_
-instructions.
+```bash
+pip uninstall jupyter_datainputtable
+```
 
-#### Change Log
+## Contributing
 
-* 0.7.6 update requirements to use upstream bug fixes.
-* 0.7.5 smaller input cells, metadata flag identifying cell as containing a 
-  data input table.
-* 0.7.4 Colored and bigger table caption. README updates.
-* 0.7.3
-  * Use jQuery style dialogs.
-  * When creating Pandas DataFrame from a table import numpy and Pandas 
-    only if necessary.
-  * README updates.  
-* 0.7.2 
-  * Ability to have a table caption.
-  * Created a file for future custom css.
-  * Expansion and cleanup of README.md.  
-* 0.7.1 Bug fixes.
-* 0.7.0
-  * Better handling of empty, string and NaN cells.
-  * Set Pandas indexes if row labels are not just numeric indexes.  
-* 0.6.0
-  * Added dialog for getting initial table dimensions.
-  * Added export table data to a Pandas DataFrame table action.
-  * Bug fixes.  
-* 0.5.0 Initial beta release
-#### Issues or comments:
+### Development install
 
-[JupyterPhysSciLab/jupyter-datainputtable](https://github.com/JupyterPhysSciLab/jupyter-datainputtable)
+Note: You will need NodeJS to build the extension package.
 
-##### [This software is distributed under the GNU V3 license](https://gnu.org/licenses)
-This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+The `jlpm` command is JupyterLab's pinned version of
+[yarn](https://yarnpkg.com/) that is installed with JupyterLab. You may use
+`yarn` or `npm` in lieu of `jlpm` below.
 
-Copyright - Jonathan Gutow, 2020, 2021.
+```bash
+# Clone the repo to your local environment
+# Change directory to the jupyter_datainputtable directory
+# Install package in development mode
+pip install -e "."
+# Link your development version of the extension with JupyterLab
+jupyter labextension develop . --overwrite
+# Rebuild extension Typescript source after making changes
+jlpm build
+```
+
+You can watch the source directory and run JupyterLab at the same time in different terminals to watch for changes in the extension's source and automatically rebuild the extension.
+
+```bash
+# Watch the source directory in one terminal, automatically rebuilding when needed
+jlpm watch
+# Run JupyterLab in another terminal
+jupyter lab
+```
+
+With the watch command running, every saved change will immediately be built locally and available in your running JupyterLab. Refresh JupyterLab to load the change in your browser (you may need to wait several seconds for the extension to be rebuilt).
+
+By default, the `jlpm build` command generates the source maps for this extension to make it easier to debug using the browser dev tools. To also generate source maps for the JupyterLab core extensions, you can run the following command:
+
+```bash
+jupyter lab build --minimize=False
+```
+
+### Development uninstall
+
+```bash
+pip uninstall jupyter_datainputtable
+```
+
+In development mode, you will also need to remove the symlink created by `jupyter labextension develop`
+command. To find its location, you can run `jupyter labextension list` to figure out where the `labextensions`
+folder is located. Then you can remove the symlink named `jupyter-datainputtable` within that folder.
+
+### Testing the extension
+
+#### Frontend tests
+
+This extension is using [Jest](https://jestjs.io/) for JavaScript code testing.
+
+To execute them, execute:
+
+```sh
+jlpm
+jlpm test
+```
+
+#### Integration tests
+
+This extension uses [Playwright](https://playwright.dev/docs/intro) for the integration tests (aka user level tests).
+More precisely, the JupyterLab helper [Galata](https://github.com/jupyterlab/jupyterlab/tree/master/galata) is used to handle testing the extension in JupyterLab.
+
+More information are provided within the [ui-tests](./ui-tests/README.md) README.
+
+### Packaging the extension
+
+See [RELEASE](RELEASE.md)

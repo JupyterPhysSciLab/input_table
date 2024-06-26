@@ -1,61 +1,77 @@
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling>=1.5.0", "jupyterlab>=4.0.0,<5", "hatch-nodejs-version>=0.3.2"]
 build-backend = "hatchling.build"
 
 [project]
-name = "jupyter-datainputtable"
-dynamic = ["version"]
-description = 'Predefined data input tables for Jupyter notebooks'
+name = "jupyter_datainputtable"
 readme = "README.md"
+license = { file = "LICENSE" }
 requires-python = ">=3.8"
-license = "MIT"
-keywords = []
-authors = [
-  { name = "gutow", email = "gutow@uwosh.edu" },
-]
 classifiers = [
-  "Development Status :: 4 - Beta",
-  "Programming Language :: Python",
-  "Programming Language :: Python :: 3.8",
-  "Programming Language :: Python :: 3.9",
-  "Programming Language :: Python :: 3.10",
-  "Programming Language :: Python :: 3.11",
-  "Programming Language :: Python :: 3.12",
-  "Programming Language :: Python :: Implementation :: CPython",
-  "Programming Language :: Python :: Implementation :: PyPy",
+    "Framework :: Jupyter",
+    "Framework :: Jupyter :: JupyterLab",
+    "Framework :: Jupyter :: JupyterLab :: 4",
+    "Framework :: Jupyter :: JupyterLab :: Extensions",
+    "Framework :: Jupyter :: JupyterLab :: Extensions :: Prebuilt",
+    "License :: OSI Approved :: BSD License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
 ]
-dependencies = []
-
-[project.urls]
-Documentation = "https://github.com/JupyterPhysSciLab/jupyter-datainputtable/README.md"
-Issues = "https://github.com/JupyterPhysSciLab/jupyter-datainputtable/issues"
-Source = "https://github.com/JupyterPhysSciLab/jupyter-datainputtable"
+dependencies = [
+]
+dynamic = ["version", "description", "authors", "urls", "keywords"]
 
 [tool.hatch.version]
-path = "src/temporary/__about__.py"
+source = "nodejs"
 
-[tool.hatch.envs.types]
-extra-dependencies = [
-  "mypy>=1.0.0",
+[tool.hatch.metadata.hooks.nodejs]
+fields = ["description", "authors", "urls"]
+
+[tool.hatch.build.targets.sdist]
+artifacts = ["jupyter_datainputtable/labextension"]
+exclude = [".github", "binder"]
+
+[tool.hatch.build.targets.wheel.shared-data]
+"jupyter_datainputtable/labextension" = "share/jupyter/labextensions/jupyter-datainputtable"
+"install.json" = "share/jupyter/labextensions/jupyter-datainputtable/install.json"
+
+[tool.hatch.build.hooks.version]
+path = "jupyter_datainputtable/_version.py"
+
+[tool.hatch.build.hooks.jupyter-builder]
+dependencies = ["hatch-jupyter-builder>=0.5"]
+build-function = "hatch_jupyter_builder.npm_builder"
+ensured-targets = [
+    "jupyter_datainputtable/labextension/static/style.js",
+    "jupyter_datainputtable/labextension/package.json",
 ]
-[tool.hatch.envs.types.scripts]
-check = "mypy --install-types --non-interactive {args:src/temporary tests}"
+skip-if-exists = ["jupyter_datainputtable/labextension/static/style.js"]
 
-[tool.coverage.run]
-source_pkgs = ["temporary", "tests"]
-branch = true
-parallel = true
-omit = [
-  "src/temporary/__about__.py",
+[tool.hatch.build.hooks.jupyter-builder.build-kwargs]
+build_cmd = "build:prod"
+npm = ["jlpm"]
+
+[tool.hatch.build.hooks.jupyter-builder.editable-build-kwargs]
+build_cmd = "install:extension"
+npm = ["jlpm"]
+source_dir = "src"
+build_dir = "jupyter_datainputtable/labextension"
+
+[tool.jupyter-releaser.options]
+version_cmd = "hatch version"
+
+[tool.jupyter-releaser.hooks]
+before-build-npm = [
+    "python -m pip install 'jupyterlab>=4.0.0,<5'",
+    "jlpm",
+    "jlpm build:prod"
 ]
+before-build-python = ["jlpm clean:all"]
 
-[tool.coverage.paths]
-temporary = ["src/temporary", "*/temporary/src/temporary"]
-tests = ["tests", "*/temporary/tests"]
-
-[tool.coverage.report]
-exclude_lines = [
-  "no cov",
-  "if __name__ == .__main__.:",
-  "if TYPE_CHECKING:",
-]
+[tool.check-wheel-contents]
+ignore = ["W002"]
