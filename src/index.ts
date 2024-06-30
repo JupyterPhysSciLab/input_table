@@ -140,10 +140,15 @@ async function get_table_init_data(){
 * Utility functions
  */
 
-function input_element_to_fixed(element:Element){
+function input_element_to_fixed(element:any){ //actually a DOM element, but TS does not believe it can have .value.
     var tempelem =document.createElement('span');
     tempelem.className=element.className;
-    tempelem.innerHTML = element.innerHTML;
+    const newText = element.value;
+    console.log("The new text for the input area:", newText);
+    if (newText){
+        tempelem.innerHTML = newText;
+    }else{
+        tempelem.innerHTML = element.innerHTML;}
     element.replaceWith(tempelem);
 }
 
@@ -242,17 +247,18 @@ const plugin: JupyterFrontEndPlugin<void> = {
             label: LockLabels.label,
             caption: LockLabels.caption,
             execute: (args:any) => {
-                let tableID = args['tableID'];
-                if (!tableID) {
+                let ID = args['tableID'];
+                console.log('Passed TableID:',ID);
+                if (!ID) {
                     const cell = notebookTools.selectedCells[0];
                     if (cell){
                         const elem = cell.node.querySelector('table');
                         if(elem){
-                            tableID = elem.id;
+                            ID = elem.id;
                         }
                     }
                 }
-                const parentTable = document.getElementById(tableID);
+                const parentTable = document.getElementById(ID);
                 if (parentTable){
                     const labelinputs = parentTable.querySelectorAll('.jp-input_table_table_label');
                     if (labelinputs){
@@ -260,7 +266,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
                             input_element_to_fixed(labelinputs[i]);
                         }
                         const lockbtn = parentTable.querySelector('.jp-input_table_lock_btn');
-                        const tempelem = Private.table_menu(tableID);
+                        const tempelem = Private.table_menu(ID);
                         if(lockbtn){
                             lockbtn.replaceWith(tempelem);
                         }
@@ -270,7 +276,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
                     console.log('No table found in LockLabels.')
                 }
                 console.log('LockLabels command called.')
-                commands.execute('SaveDataTable:jupyter-inputtable', {args:{tableID:tableID}});
+                commands.execute('SaveDataTable:jupyter-inputtable', {tableID:ID});
             }
         });
         const SaveDataTable:CmdandInfo = {
@@ -282,8 +288,18 @@ const plugin: JupyterFrontEndPlugin<void> = {
             label: SaveDataTable.label,
             caption: SaveDataTable.caption,
             execute: (args:any) => {
-                const tableID = args['tableID']
-                const table = document.getElementById(tableID);
+                let ID = args['tableID'];
+                console.log('Passed TableID:',ID);
+                if (!ID) {
+                    const cell = notebookTools.selectedCells[0];
+                    if (cell){
+                        const elem = cell.node.querySelector('table');
+                        if(elem){
+                            ID = elem.id;
+                        }
+                    }
+                }
+                const table = document.getElementById(ID);
                 if (table){
                     const datainputs = table.querySelectorAll('.jp-input_table_data_cell');
                     if (datainputs){
@@ -292,12 +308,12 @@ const plugin: JupyterFrontEndPlugin<void> = {
                         }
                         let save_btn = table.querySelector('.jp-input_table_save_btn');
                         if(save_btn){
-                            save_btn.replaceWith(Private.table_menu(tableID));
+                            save_btn.replaceWith(Private.table_menu(ID));
                         }
                         let tablecnt = table.innerHTML;
                         let tablestr= Private.input_table_prestr();
                         tablestr+='display(HTML(\'';
-                        tablestr+='<table class="jp-input_table" id="'+tableID+'">';
+                        tablestr+='<table class="jp-input_table" id="'+ID+'">';
                         const re=/\n/g;
                         const re2=/'/g;
                         tablestr+=tablecnt.replace(re,' ').replace(re2,'\\\'')+'</table>';
@@ -311,8 +327,11 @@ const plugin: JupyterFrontEndPlugin<void> = {
                         } else {
                             window.alert('Please select a cell in a notebook.');
                         }
-
+                    }else{
+                        console.log('No datacells found in table. Nothing saved.');
                     }
+                }else{
+                    console.log('No datatable found to save.', ID);
                 }
                 console.log("SaveDataTable command called.")
             }
