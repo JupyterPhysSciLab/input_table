@@ -37,6 +37,12 @@ class NewDataTableDialogBody extends Widget {
 }
 
 namespace Private {
+    export function newTableID(){
+        const d = new Date();
+        const ID = "it_"+(Math.round(d.getTime()));
+        return ID
+    }
+
     export function dialogBodyHTML():HTMLElement{
         const instructions = "Set table size remembering to include enough rows and columns for labels.";
         const fields = ["Table Title (caption)","Number of Rows", "Number of Columns"];
@@ -53,7 +59,6 @@ namespace Private {
             let inputstr = fields[i]+': ';
             inputstr +='<input type="text" size="'+fieldlen[i]+'" value="'+
                         field_defaults[i]+'" ';
-            //inputstr += 'onblur="record_input(this)"';
             inputstr += '></input>';
             templine.innerHTML=inputstr;
             //templine.setAttribute('style','text-align:center;');
@@ -61,35 +66,56 @@ namespace Private {
         }
     return tempbody;
     }
+
     export function input_table_prestr():string {
         let prestr='# If no data table appears in the output of this cell, run the cell to display the table.\n\n';
         prestr+='from IPython.display import HTML\n';
-        prestr+='try:\n';
+        /*p
+        restr+='try:\n';
         prestr+='    import input_table\n';
         prestr+='except (ImportError, FileNotFoundError) as e:\n';
         prestr+='    print("Table editing will not work because `jupyter_datainputtable` module is not installed in python kernel")\n';
-        return prestr
+        */
+        return prestr;
     }
 
-    export function table_menu(tableID:string){
-        const menu = document.createElement('select');
-        menu.classList.add('jp-input_table_menu');
-        let actionstr = 'var lastvalue = this.value;';
-        actionstr+='this.value = "Table Actions";';
-        actionstr+='if(lastvalue=="Edit Data"){edit_input_table("'+tableID+'");}';
-        actionstr+='if(lastvalue=="Data to Pandas..."){data_table_to_Pandas("'+tableID+'");}';
-        menu.setAttribute('onchange',actionstr);
-        let optiontxt = '<option title="Things you can do to this table.">Table Actions</option>';
-        optiontxt+='<option title="Start editing the data.">Edit Data</option>';
-        optiontxt+='<option title="Create a Panda DataFrame from table.">Data to Pandas...</option>';
-        menu.innerHTML=optiontxt;
-        return menu
+    export function table_actions(ID:string):string{
+        let actiontblstr = '<div';
+        actiontblstr += ' class = "jp-input_table_actions">';
+        actiontblstr += '<p class = "jp-input_table_actions">Actions only work if jupyter-datainputtable extension installed.</p>';
+        actiontblstr += '<div class = "jp-input_table_actions_label">Table Actions</div>';
+        interface action {
+            label: string;
+            title: string;
+            jp_cmd: string;}
+        const actions:(action)[] =[{
+            label: 'Edit Data',
+            title: 'Start editing the data.',
+            jp_cmd: 'EditDataTable:jupyter-inputtable'
+        },
+        {
+            label: 'Data to Pandas...',
+            title: 'Create a Panda DataFrame from table.',
+            jp_cmd: 'DataToPandas:jupyter-inputtable'
+        },
+        {
+            label: 'Save Table',
+            title: 'Save the updated data table.',
+            jp_cmd: 'SaveDataTable:jupyter-inputtable'
+        }]
+        for (const act of actions){
+            actiontblstr += '<button class ="jp-Button jp-input_table_actions_btn"';
+            actiontblstr += ' data-commandlinker-command="'+act.jp_cmd+'" ';
+            actiontblstr += 'data-commandlinker-args=\\\'{"tableID":"'+ID+'"}\\\'';
+            actiontblstr += 'title="'+act.title+'">';
+            actiontblstr +=  ''+act.label+'</button>';
+        }
+        actiontblstr+='</div>';
+        return actiontblstr;
     }
 
     export function TableHTMLstr(caption:string,
-        nrows: number, ncols: number):string {
-        const d = new Date();
-        const ID = "it_"+(Math.round(d.getTime()));
+        nrows: number, ncols: number, ID:string):string {
         const labelClass = "jp-input_table_table_label";
         const dataCellClass="jp-input_table_data_cell";
         var tempstr='<table class="jp-input_table" id="'+ID+'">';
@@ -99,9 +125,9 @@ namespace Private {
             for(var k = 0;k < ncols; k++){
                 if (k==0 && i==0){
                     tempstr+='  <th class="jp-input_table r'+i+' c'+k+'">';
-                    tempstr+='<button class="jp-input_table_lock_btn" ';
+                    tempstr+='<button class="jp-Button jp-input_table_lock_btn" ';
                     tempstr+='data-commandlinker-command="LockLabels:jupyter-inputtable" ';
-                    //tempstr+= 'data-commandlinker-args="{tableID:\\''+ID+'\\'}";
+                    tempstr+= 'data-commandlinker-args=\\\'{"tableID":"'+ID+'"}\\\'';
                     tempstr+= '>';
                     tempstr+='Lock Column and Row Labels</button></th>';
                 }
@@ -216,13 +242,17 @@ const plugin: JupyterFrontEndPlugin<void> = {
             label: NewDataTable.label,
             caption: NewDataTable.caption,
             execute: async() => {
+                const ID = Private.newTableID()
                 console.log('Insert data entry table called.');
                 const result = await get_table_init_data();
                 console.log("Input Table Params:",result);
                 if (result.button.accept && result.value){
                     let toInsertStr = Private.input_table_prestr();
-                    toInsertStr += 'display(HTML(\''+Private.TableHTMLstr(result.value[0],
-                            (Number(result.value[1])), (Number(result.value[2])))+'\'))';
+                    toInsertStr += 'display(HTML(\'<div class="jp-input_table">';
+                    toInsertStr += Private.table_actions(ID);
+                    toInsertStr += Private.TableHTMLstr(result.value[0],
+                            (Number(result.value[1])), (Number(result.value[2])),ID);
+                    toInsertStr += '</div>\'))';
                     if (notebookTools.selectedCells){
                         // We will only act on the first selected cell
                         const cell = notebookTools.selectedCells[0];
@@ -252,7 +282,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
                 if (!ID) {
                     const cell = notebookTools.selectedCells[0];
                     if (cell){
-                        const elem = cell.node.querySelector('table');
+                        const elem = cell.node.querySelector('table.jp-input_table');
                         if(elem){
                             ID = elem.id;
                         }
@@ -266,9 +296,8 @@ const plugin: JupyterFrontEndPlugin<void> = {
                             input_element_to_fixed(labelinputs[i]);
                         }
                         const lockbtn = parentTable.querySelector('.jp-input_table_lock_btn');
-                        const tempelem = Private.table_menu(ID);
                         if(lockbtn){
-                            lockbtn.replaceWith(tempelem);
+                            lockbtn.replaceWith('');
                         }
                     }else{
                         console.log('No label cells found in the input table.')}
@@ -293,9 +322,12 @@ const plugin: JupyterFrontEndPlugin<void> = {
                 if (!ID) {
                     const cell = notebookTools.selectedCells[0];
                     if (cell){
-                        const elem = cell.node.querySelector('table');
+                        const elem = cell.node.querySelector('div.jp-input_table');
                         if(elem){
-                            ID = elem.id;
+                            const tblelem = elem.querySelector('table.jp-input_table');
+                            if (tblelem){
+                                ID = tblelem.id;
+                            }
                         }
                     }
                 }
@@ -306,17 +338,15 @@ const plugin: JupyterFrontEndPlugin<void> = {
                         for(var i=0;i<datainputs.length;i++){
                             input_element_to_fixed(datainputs[i]);
                         }
-                        let save_btn = table.querySelector('.jp-input_table_save_btn');
-                        if(save_btn){
-                            save_btn.replaceWith(Private.table_menu(ID));
-                        }
                         let tablecnt = table.innerHTML;
                         let tablestr= Private.input_table_prestr();
-                        tablestr+='display(HTML(\'';
+                        tablestr+='display(HTML(\'<div class="jp-input_table">';
+                        tablestr += Private.table_actions(ID);
                         tablestr+='<table class="jp-input_table" id="'+ID+'">';
                         const re=/\n/g;
                         const re2=/'/g;
                         tablestr+=tablecnt.replace(re,' ').replace(re2,'\\\'')+'</table>';
+                        tablestr += '</div>';
                         tablestr+='\'))';
                         select_containing_cell(table); //force selection of cell containing the table.
                         if (notebookTools.selectedCells){
