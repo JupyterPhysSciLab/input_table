@@ -366,6 +366,42 @@ const plugin: JupyterFrontEndPlugin<void> = {
                 console.log("SaveDataTable command called.")
             }
         });
+        const EditDataTable:CmdandInfo = {
+            id: 'EditDataTable:jupyter-inputtable',
+            label: 'Start editing the data table.',
+            caption:'Makes the data cells in the table editable.'
+        };
+        commands.addCommand(EditDataTable.id, {
+            label: EditDataTable.label,
+            caption: EditDataTable.caption,
+            execute: (args:any) => {
+                let ID = args['tableID'];
+                console.log('Passed TableID:',ID);
+                if (!ID) {
+                    const cell = notebookTools.selectedCells[0];
+                    if (cell){
+                        const elem = cell.node.querySelector('div.jp-input_table');
+                        if(elem){
+                            const tblelem = elem.querySelector('table.jp-input_table');
+                            if (tblelem){
+                                ID = tblelem.id;
+                            }
+                        }
+                    }
+                }
+                const table = document.getElementById(ID);
+                if (table){
+                    const datainputs = table.querySelectorAll('.jp-input_table_data_cell');
+                    if (datainputs){
+                        for(var i=0;i<datainputs.length;i++){
+                            data_cell_to_input_cell(datainputs[i]);
+                        }
+                    }
+                }
+                console.log('Edit data table command called.');
+            }
+        });
+
         console.log('JupyterLab extension jupyter-datainputtable is activated!');
 
     }
