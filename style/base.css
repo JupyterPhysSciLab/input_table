@@ -40,6 +40,7 @@
     padding: 4px;
     margin: 4px;
     display:inline-flex;
+    text-decoration:unset !important;
 }
 
 .jp-input_table_actions_label{

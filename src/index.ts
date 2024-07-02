@@ -120,7 +120,7 @@ namespace Private {
         let actiontblstr = '<div';
         actiontblstr += ' class = "jp-input_table_actions">';
         actiontblstr += '<p class = "jp-input_table_actions">Actions only work if jupyter-datainputtable extension installed.</p>';
-        actiontblstr += '<div class = "jp-input_table_actions_label">Table Actions</div>';
+        actiontblstr += '<div class = "jp-input_table_actions_label" style = "display:inline-flex;">Table Actions</div>';
         interface action {
             label: string;
             title: string;
@@ -142,6 +142,7 @@ namespace Private {
         }]
         for (const act of actions){
             actiontblstr += '<button class ="jp-Button jp-input_table_actions_btn"';
+            actiontblstr += ' style = "margin:4px;text-decoration:red line-through;"';
             actiontblstr += ' data-commandlinker-command="'+act.jp_cmd+'" ';
             actiontblstr += 'data-commandlinker-args=\\\'{"tableID":"'+ID+'"}\\\'';
             actiontblstr += 'title="'+act.title+'">';
@@ -155,13 +156,16 @@ namespace Private {
         nrows: number, ncols: number, ID:string):string {
         const labelClass = "jp-input_table_table_label";
         const dataCellClass="jp-input_table_data_cell";
-        var tempstr='<table class="jp-input_table" id="'+ID+'">';
-        tempstr += '<caption class="jp-input_table">'+caption+'</caption><tbody>';
-        for(var i = 0; i < nrows; i++){
+        let tempstr='<table class="jp-input_table" id="'+ID+'"';
+        tempstr += ' style = "min-width:80%;">';
+        tempstr += '<caption class="jp-input_table" style = "font-weight:bold;';
+        tempstr += 'font-size:1.5em;color:darkkhaki;text-align:left;">'+caption+'</caption><tbody>';
+        for(let i = 0; i < nrows; i++){
             tempstr+=' <tr class="jp-input_table r'+i+'">';
-            for(var k = 0;k < ncols; k++){
+            for(let k = 0;k < ncols; k++){
                 if (k==0 && i==0){
-                    tempstr+='  <th class="jp-input_table r'+i+' c'+k+'">';
+                    tempstr+='  <th class="jp-input_table r'+i+' c'+k+'"';
+                    tempstr += ' style="text-align:left;padding:0px;border-width:1px;border-style:solid;">';
                     tempstr+='<button class="jp-Button jp-input_table_lock_btn" ';
                     tempstr+='data-commandlinker-command="LockLabels:jupyter-inputtable" ';
                     tempstr+= 'data-commandlinker-args=\\\'{"tableID":"'+ID+'"}\\\'';
@@ -169,17 +173,20 @@ namespace Private {
                     tempstr+='Lock Column and Row Labels</button></th>';
                 }
                 if (k==0 && i>0){
-                    tempstr+='<th class="jp-input_table r'+i+' c'+k+'">';
+                    tempstr+='<th class="jp-input_table r'+i+' c'+k+'"';
+                    tempstr += ' style="text-align:left;padding:0px;border-width:1px;border-style:solid;">';
                     tempstr+='<textarea class="'+labelClass+'" size="7">';
                     tempstr+=''+(i-1)+'</textarea></th>';
                 }
                 if (i==0 && k>0){
-                    tempstr+='<th class="jp-input_table r'+i+' c'+k+'">';
+                    tempstr+='<th class="jp-input_table r'+i+' c'+k+'"';
+                    tempstr += ' style="text-align:left;padding:0px;border-width:1px;border-style:solid;">';
                     tempstr+='<textarea class="'+labelClass+'" size="15">';
                     tempstr+='Col_'+(k-1)+'</textarea></th>';
                 }
                 if (k>0 && i>0){
-                    tempstr+='  <td class="jp-input_table r'+i+' c'+k+'">';
+                    tempstr+='  <td class="jp-input_table r'+i+' c'+k+'"';
+                    tempstr += ' style="text-align:left;padding:0px;border-width:1px;border-style:solid;">';
                     tempstr+='<textarea class="'+dataCellClass+'" size="7">';
                     tempstr+='</textarea></td>';
                 }
@@ -392,7 +399,8 @@ const plugin: JupyterFrontEndPlugin<void> = {
                         let tablestr= Private.input_table_prestr();
                         tablestr+='display(HTML(\'<div class="jp-input_table">';
                         tablestr += Private.table_actions(ID);
-                        tablestr+='<table class="jp-input_table" id="'+ID+'">';
+                        tablestr+='<table class="jp-input_table" id="'+ID+'"';
+                        tablestr += ' style = "min-width:80%;">';
                         const re=/\n/g;
                         const re2=/'/g;
                         tablestr+=tablecnt.replace(re,' ').replace(re2,'\\\'')+'</table>';
