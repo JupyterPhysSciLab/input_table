@@ -95,6 +95,7 @@ namespace Private {
                         field_defaults[i]+'" ';
             if (fieldtype[i] == 'textarea'){
                 inputstr +=' onblur="this.innerHTML=this.value;"';
+                inputstr += ' placeholder = "'+field_defaults[i]+'"';
             }
             inputstr += '></'+fieldtype[i]+'>';
             templine.innerHTML=inputstr;
