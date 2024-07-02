@@ -29,10 +29,28 @@ class NewDataTableDialogBody extends Widget {
     }
     getValue():string[] {
         let values: string[] = [];
+        const captionInfo = this.node.querySelector('textarea');
+        if (captionInfo){
+            values.push(captionInfo.innerHTML);
+        }
         for (const k of this.node.querySelectorAll("input")){
             values.push(k.value);
         }
         return values;
+    }
+}
+
+class getNameForPandasBody extends Widget {
+    constructor(){
+        super({node:Private.getNameForPandasHTML()});
+    }
+    getValue():string {
+        const tempinp = this.node.querySelector("input");
+        if (tempinp){
+            return tempinp.value;
+        } else {
+            return '';
+        }
     }
 }
 
@@ -43,10 +61,26 @@ namespace Private {
         return ID
     }
 
+    export function getNameForPandasHTML():HTMLElement{
+        let instructions = 'Provide a name for the new dataframe. It should have no spaces and cannot';
+        instructions += ' start with a number.';
+        const tempbody = document.createElement('div');
+        tempbody.setAttribute('id',"get_name_for_pandas_dlg");
+        const tempinstr = document.createElement('H4');
+        tempinstr.innerHTML = instructions;
+        tempbody.append(tempinstr);
+        const tempinp = document.createElement('input');
+        tempinp.setAttribute('type','text');
+        tempinp.setAttribute('size', '40');
+        tempbody.append(tempinp);
+        return tempbody;
+    }
+
     export function dialogBodyHTML():HTMLElement{
         const instructions = "Set table size remembering to include enough rows and columns for labels.";
         const fields = ["Table Title (caption)","Number of Rows", "Number of Columns"];
         const fieldlen = [40, 15, 15];
+        const fieldtype = ['textarea', 'input', 'input']
         const field_defaults = ["Table _ : ...", "2", "2"];
         const tempbody = document.createElement('div');
         tempbody.setAttribute('id',"input_table_dim_dlg");
@@ -57,9 +91,12 @@ namespace Private {
         for (let i = 0; i < fieldlen.length;i++){
             const templine=document.createElement('div');
             let inputstr = fields[i]+': ';
-            inputstr +='<input type="text" size="'+fieldlen[i]+'" value="'+
+            inputstr +='<'+fieldtype[i]+' type="text" size="'+fieldlen[i]+'" value="'+
                         field_defaults[i]+'" ';
-            inputstr += '></input>';
+            if (fieldtype[i] == 'textarea'){
+                inputstr +=' onblur="this.innerHTML=this.value;"';
+            }
+            inputstr += '></'+fieldtype[i]+'>';
             templine.innerHTML=inputstr;
             //templine.setAttribute('style','text-align:center;');
             tempbody.append(templine);
@@ -162,6 +199,16 @@ async function get_table_init_data(){
                                     hasClose: false});
     return result;
 };
+
+async function get_name_for_pandas_df(){
+    const GetPdDFWidg = new getNameForPandasBody();
+    const buttons = [Dialog.cancelButton(), Dialog.okButton()];
+    const result = await showDialog({body: GetPdDFWidg,
+                                    buttons: buttons,
+                                    hasClose: false});
+    return result;
+}
+
 /**
 * Utility functions
  */
@@ -257,6 +304,9 @@ const plugin: JupyterFrontEndPlugin<void> = {
                         // We will only act on the first selected cell
                         const cell = notebookTools.selectedCells[0];
                         replaceCellContents(cell, toInsertStr);
+                        cell.model.setMetadata("editable", false);
+                        cell.model.setMetadata("deletable", false);
+                        commands.execute('notebook:run-cell');
                     } else {
                         window.alert('Please select a cell in a notebook.');
                     }
@@ -402,6 +452,51 @@ const plugin: JupyterFrontEndPlugin<void> = {
             }
         });
 
+        const DataToPandas:CmdandInfo = {
+            id: 'DataToPandas:jupyter-inputtable',
+            label: 'Create a Panda DataFrame from table.',
+            caption:'Create a Panda DataFrame from table.'
+        };
+        commands.addCommand(DataToPandas.id, {
+            label: DataToPandas.label,
+            caption: DataToPandas.caption,
+            execute: async (args:any) => {
+                let ID = args['tableID'];
+                console.log('Passed TableID:',ID);
+                if (!ID) {
+                    const cell = notebookTools.selectedCells[0];
+                    if (cell){
+                        const elem = cell.node.querySelector('div.jp-input_table');
+                        if(elem){
+                            const tblelem = elem.querySelector('table.jp-input_table');
+                            if (tblelem){
+                                ID = tblelem.id;
+                            }
+                        }
+                    }
+                }
+                const table = document.getElementById(ID);
+                if (table){
+                    // Get a name for the dataframe using a dialog
+                    const result = await get_name_for_pandas_df();
+                    console.log('pandas name result:', result);
+                    if (result.button.accept && result.value){
+                         // Extract the data see fixpd_makeDF in old js.
+                        /* might be useful:
+                        const datainputs = table.querySelectorAll('.jp-input_table_data_cell');
+                        if (datainputs){
+                            for(var i=0;i<datainputs.length;i++){
+                                data_cell_to_input_cell(datainputs[i]);
+                            }
+                        }
+                        */
+                         // Insert a new cell immediately below
+                         // Inject the python to create the dataframe.
+                    }
+                }
+                console.log('Data to Pandas command called.');
+            }
+        });
         console.log('JupyterLab extension jupyter-datainputtable is activated!');
 
     }

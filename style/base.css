@@ -1,0 +1,61 @@
+/*
+    See the JupyterLab Developer Guide for useful CSS Patterns:
+
+    https://jupyterlab.readthedocs.io/en/stable/developer/css.html
+*/
+#input_table_dim_dlg textarea{
+    width: 40em;
+}
+.jp-input_table table{
+    min-width:80%;
+}
+.jp-input_table caption {
+    font-weight: bold;
+    font-size: 1.5em;
+    color: darkkhaki;
+    text-align: left;
+}
+.jp-input_table td {
+    text-align:left!important;
+    padding:0px;
+    border-width:1px;
+    border-style:solid;
+}
+.jp-input_table th {
+    text-align:left!important;
+    padding:0px;
+    border-width:1px;
+    border-style:solid;
+}
+.jp-input_table tr {
+    text-align:left!important;
+}
+
+.jp-input_table_actions {
+    text-align:left!important;
+    margin: unset!important;
+}
+
+.jp-input_table_actions_btn {
+    padding: 4px;
+    margin: 4px;
+    display:inline-flex;
+}
+
+.jp-input_table_actions_label{
+    text-align:left!important;
+    margin: 4px;
+    font-weight:bold;
+    display:inline-flex;
+}
+
+.jp-input_table_lock_btn{}
+
+.jp-input_table_save_btn {}
+
+.jp-input_table_table_label{}
+
+.jp-input_table_data_cell{
+    width:98%!important;
+}
+
