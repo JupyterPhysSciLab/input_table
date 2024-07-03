@@ -5,6 +5,10 @@
 Tools for generating predefined data input tables for use in Jupyter notebooks.
 This is primarily for student worksheets.
 
+TOC: [Current Features](#current-features) | [Usage](#usage) | 
+[Requirements](#requirements) | [Install](#install) | [Uninstall](#uninstall) |
+[Contributing](#contributing)
+
 ## Current Features:
 
 * Can create a table using the `Insert Data Entry Table` command in the 
