@@ -2,7 +2,9 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 ## 0.8.0 (June XX, 2024)
-* Converted to a Jupyter Lab 4.0+ compatible plugin.
+* Converted to a Jupyter Lab 4+ and notebook 7+ compatible plugin.
+* **DEPRECATION:** Support for classic Jupyter (nbclassic) is dropped. 
+  Versions 0.7.6 should still work with classic Jupyter. 
 * Moved actions to buttons from a selection dropdown.
 * Added command to insert data input table to the Jupyter Lab command palette.
 * Converted editable version of cells to resizable textareas.
