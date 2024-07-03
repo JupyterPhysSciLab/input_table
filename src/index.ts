@@ -6,8 +6,9 @@ import { ICommandPalette,
     showDialog,
     Dialog
     } from '@jupyterlab/apputils';
-import { INotebookTools
-    // INotebookTracker
+import { INotebookTools,
+    NotebookActions,
+    INotebookTracker
     } from '@jupyterlab/notebook';
 import { Cell } from '@jupyterlab/cells';
 import { Widget } from '@lumino/widgets';
@@ -282,10 +283,11 @@ const plugin: JupyterFrontEndPlugin<void> = {
     id: 'jupyter-datainputtable:plugin',
     description: 'Predefined data input tables for Jupyter notebooks',
     autoStart: true,
-    requires: [ICommandPalette, INotebookTools],
+    requires: [ICommandPalette, INotebookTools, INotebookTracker],
     activate: (app: JupyterFrontEnd,
         palette: ICommandPalette,
-        notebookTools: INotebookTools
+        notebookTools: INotebookTools,
+        notebookTracker: INotebookTracker
         ) => {
         const {commands} = app;
         const NewDataTable:CmdandInfo = {
@@ -309,12 +311,14 @@ const plugin: JupyterFrontEndPlugin<void> = {
                             (Number(result.value[1])), (Number(result.value[2])),ID);
                     toInsertStr += '</div>\'))';
                     if (notebookTools.selectedCells){
-                        // We will only act on the first selected cell
+                        // Use first selected cell.
                         const cell = notebookTools.selectedCells[0];
-                        replaceCellContents(cell, toInsertStr);
-                        cell.model.setMetadata("editable", false);
-                        cell.model.setMetadata("deletable", false);
-                        commands.execute('notebook:run-cell');
+                        if (cell){
+                            replaceCellContents(cell, toInsertStr);
+                            cell.model.setMetadata("editable", false);
+                            cell.model.setMetadata("deletable", false);
+                            commands.execute('notebook:run-cell');
+                        }
                     } else {
                         window.alert('Please select a cell in a notebook.');
                     }
@@ -486,21 +490,143 @@ const plugin: JupyterFrontEndPlugin<void> = {
                 }
                 const table = document.getElementById(ID);
                 if (table){
-                    // Get a name for the dataframe using a dialog
+                    // Extract the data see fixpd_makeDF in old js.
+                    let rows = table.querySelectorAll('tr');
+                    let nrows = rows.length;
+                    let ncols = rows[0].querySelectorAll('th').length;
+                    let colnames = [];
+                    let escnamestr = [];
+                    let data = [];
+                    //sort data into columns
+                    for(let i=1;i<ncols;i++){
+                        let classstr='.c'+i;
+                        const coli = rows[0].querySelector(classstr);
+                        let colname = ''
+                        if (coli) {
+                            const labelcell = coli.querySelector(
+                            ".jp-input_table_table_label");
+                            if (labelcell){
+                                colname = labelcell.innerHTML;
+                            }
+                        }
+                        colnames[i-1]= colname;
+                        escnamestr[i-1] = colnames[i-1].replaceAll(' ','_').replaceAll('(','_')
+                        .replaceAll(')','_').replaceAll('/','_').replaceAll('*','_').replaceAll('+','_')
+                        .replaceAll('-','_').replaceAll('^','_').replaceAll('$','')
+                        .replaceAll('{','_').replaceAll('}','_');
+                        let tempcol =[];
+                        for (let k=1;k<nrows;k++){
+                            classstr = '.r'+k+'.c'+i;
+                            let tempdata = '';
+                            const temprow = rows[k].querySelector(classstr);
+                            if (temprow){
+                                const tempcell = temprow.querySelector(".jp-input_table_data_cell");
+                                if (tempcell){
+                                    tempdata = tempcell.innerHTML;
+                                }
+                            }
+                            tempcol[k-1] = tempdata;
+                            const alphare = /[a-zA-Z]/;
+                            if (alphare.test(tempcol[k-1])){
+                                tempcol[k-1]='\''+tempcol[k-1]+'\'';
+                            }
+                            if (tempcol[k-1]==''){
+                                tempcol[k-1]='np.nan';
+                            }
+                            const nanre = /np\.nan/i;
+                            if(nanre.test(tempcol[k-1])){
+                                tempcol[k-1]='np.nan';
+                            }
+                        }
+                        data[i-1]=tempcol;
+                    }
+                    //get indexes if they are not just numeric
+                    let use_indexes = false;
+                    let indexes = [];
+                    for (let i = 1; i < nrows;i++){
+                        let classstr = '.r'+i+' .c0';
+                        let tempindex = '';
+                        const tempcol0 = table.querySelector(classstr);
+                        if (tempcol0){
+                            const tempindexlabel = tempcol0.querySelector(".jp-input_table_table_label");
+                            if (tempindexlabel){
+                                tempindex = tempindexlabel.innerHTML;
+                            }
+                        }
+                        indexes[i-1] = tempindex;
+                        if (indexes[i-1] != (i-1).toString()){use_indexes = true;}
+                    }
+                    // Create the python to create the dataframe.
+                    let pythoncode = '# Package Imports. These do nothing if packages already imported.\n';
+                    pythoncode += 'import numpy as np\n';
+                    pythoncode += 'import pandas as pd\n';
+                    pythoncode += '# Define the columns\n'
+                    let dataframe_param = "{\""+colnames[0]+"\":"+escnamestr[0]+",\n";
+                    for (let i=0;i<(ncols-1);i++){
+                        pythoncode += escnamestr[i]+"=["+data[i]+"]\n";
+                        if (i>0){dataframe_param +="    \""+colnames[i]+"\":"+escnamestr[i]+",\n";}
+                    }
+                    dataframe_param +="    }"
+                    if (use_indexes){
+                        dataframe_param +=", index = [";
+                        for (let i = 0; i < indexes.length;i++){
+                            dataframe_param += "\""+indexes[i]+"\", ";
+                        }
+                        dataframe_param += "]";
+                    }
+                    select_containing_cell(table);
+                    // record the cell index and add a cell below
+                    let cell = notebookTools.activeCell;
+                    let tablecellindex = null;
+                    const currentnotebook = notebookTracker.currentWidget;
+                    if (currentnotebook){
+                        const content = currentnotebook.content;
+                        if (content){
+                            tablecellindex = content.activeCellIndex;
+                            await NotebookActions.insertBelow(content);
+                        }
+                    }
+                    /**
+                    * Now get a name for the dataframe using a dialog.
+                    */
                     const result = await get_name_for_pandas_df();
                     console.log('pandas name result:', result);
                     if (result.button.accept && result.value){
-                         // Extract the data see fixpd_makeDF in old js.
-                        /* might be useful:
-                        const datainputs = table.querySelectorAll('.jp-input_table_data_cell');
-                        if (datainputs){
-                            for(var i=0;i<datainputs.length;i++){
-                                data_cell_to_input_cell(datainputs[i]);
+                        if (!result.value || result.value==''){
+                            window.alert('You must provide a valid name for the'+
+                            ' dataframe. It may not start with a number nor'+
+                            ' contain special characters.')
+                        } else {
+                            pythoncode += '# Create the DataFrame.\n'
+                            pythoncode += result.value + '= pd.DataFrame('+dataframe_param+')\n';
+                            pythoncode += '# Print a label and output a summary of the DataFrame.\n'
+                            pythoncode += 'print(\'DataFrame '+result.value+':\')\n';
+                            pythoncode += result.value;
+                            //const currentnotebook = app.shell.currentWidget;
+                            //const cell = notebookTools.selectedCells[0];
+
+                            let newActiveIndex = null;
+                            if (currentnotebook){
+                                const content = currentnotebook.content;
+                                if (content){
+                                    await NotebookActions.selectBelow(content);
+                                    newActiveIndex = content.activeCellIndex;
+                                }
                             }
+                            console.log('Index of cell with table:',tablecellindex,'. Index of new cell',
+                                newActiveIndex);
+                            if (tablecellindex!=newActiveIndex){
+                                cell = notebookTools.activeCell;
+                                if (cell){replaceCellContents(cell, pythoncode);}
+                            }
+                            // Following two lines should not be necessary, but cell is getting locked.
+                            // Typescript compilation error?
+                            //cell.model.setMetadata("editable", true);
+                            //cell.model.setMetadata("deletable", true);
+                            commands.execute('notebook:run-cell');
+                            console.log('Current Notebook? ',currentnotebook);
+                            //console.log(pythoncode);
                         }
-                        */
-                         // Insert a new cell immediately below
-                         // Inject the python to create the dataframe.
                     }
                 }
                 console.log('Data to Pandas command called.');
