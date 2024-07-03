@@ -37,7 +37,7 @@ This is primarily for student worksheets.
 If you are using JupyterPhysSciLab/InstructorTools and have activated the menu
 select the "Insert New Data Table..." item from the menu (figure 1).
 
-![JPSL Instructor Tools Menu](JPSL Instructor Menu ann.png)
+![JPSL Instructor Tools Menu](JPSL_Instructor_Menu_ann.png)
 
 **Figure 1:** Menu item in JPSL Instructor Tools menu.
 
