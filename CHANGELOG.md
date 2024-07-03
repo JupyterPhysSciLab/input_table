@@ -3,6 +3,10 @@
 <!-- <START NEW CHANGELOG ENTRY> -->
 ## 0.8.0 (June XX, 2024)
 * Converted to a Jupyter Lab 4+ and notebook 7+ compatible plugin.
+* **DEPRECATION:** Input data tables created with earlier versions will not 
+  be editable or create pandas dataframes with this version. Tables should 
+  be recreated with this version. WHY: programmatic access to notebooks in 
+  Jupyter Lab is much more limited.
 * **DEPRECATION:** Support for classic Jupyter (nbclassic) is dropped. 
   Versions 0.7.6 should still work with classic Jupyter. 
 * Moved actions to buttons from a selection dropdown.
@@ -14,3 +18,32 @@
   consists of four lines as the html is on a single line. Still can be 
   manually collapsed.
 <!-- <END NEW CHANGELOG ENTRY> -->
+## 0.7.6
+* update requirements to use upstream bug fixes.
+## 0.7.5 
+* smaller input cells
+* metadata flag identifying cell as containing a 
+  data input table.
+## 0.7.4
+* Colored and bigger table caption. 
+* README updates.
+## 0.7.3
+* Use jQuery style dialogs.
+* When creating Pandas DataFrame from a table import numpy and Pandas 
+  only if necessary.
+* README updates.  
+## 0.7.2 
+* Ability to have a table caption.
+* Created a file for future custom css.
+* Expansion and cleanup of README.md.  
+## 0.7.1 
+* Bug fixes.
+## 0.7.0
+* Better handling of empty, string and NaN cells.
+* Set Pandas indexes if row labels are not just numeric indexes.  
+## 0.6.0
+* Added dialog for getting initial table dimensions.
+* Added export table data to a Pandas DataFrame table action.
+* Bug fixes.  
+## 0.5.0
+* Initial beta release
