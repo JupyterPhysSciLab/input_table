@@ -177,19 +177,22 @@ namespace Private {
                 if (k==0 && i>0){
                     tempstr+='<th class="jp-input_table r'+i+' c'+k+'"';
                     tempstr += ' style="text-align:left;padding:0px;border-width:1px;border-style:solid;">';
-                    tempstr+='<textarea class="'+labelClass+'" size="7">';
+                    tempstr+='<textarea class="'+labelClass+'"';
+                    tempstr +=' onblur="this.innerHTML=this.value;">';
                     tempstr+=''+(i-1)+'</textarea></th>';
                 }
                 if (i==0 && k>0){
                     tempstr+='<th class="jp-input_table r'+i+' c'+k+'"';
                     tempstr += ' style="text-align:left;padding:0px;border-width:1px;border-style:solid;">';
-                    tempstr+='<textarea class="'+labelClass+'" size="15">';
+                    tempstr+='<textarea class="'+labelClass+'"';
+                    tempstr +=' onblur="this.innerHTML=this.value;">';
                     tempstr+='Col_'+(k-1)+'</textarea></th>';
                 }
                 if (k>0 && i>0){
                     tempstr+='  <td class="jp-input_table r'+i+' c'+k+'"';
                     tempstr += ' style="text-align:left;padding:0px;border-width:1px;border-style:solid;">';
-                    tempstr+='<textarea class="'+dataCellClass+'" size="7">';
+                    tempstr+='<textarea class="'+dataCellClass+'"';
+                    tempstr +=' onblur="this.innerHTML=this.value;">';
                     tempstr+='</textarea></td>';
                 }
             }
@@ -237,6 +240,7 @@ function input_element_to_fixed(element:any){ //actually a DOM element, but TS d
 export function data_cell_to_input_cell(element:Element){
     const tempelem=document.createElement('textarea');
     tempelem.setAttribute('size','4');
+    tempelem.setAttribute('onblur','this.innerHTML=this.value;');
     let tempid = element.id;
     if (tempid==null){tempid=''};
     tempelem.id=tempid;
