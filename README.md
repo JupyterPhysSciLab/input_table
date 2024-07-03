@@ -5,39 +5,69 @@
 Tools for generating predefined data input tables for use in Jupyter notebooks.
 This is primarily for student worksheets.
 
-#### Current Features:
+## Current Features:
 
-* Can create a table using a python command in the Jupyter notebook.
-* If using JupyterPhysSciLab/InstructorTools tables can be
-created using menu items in the Jupyter notebook (recommended usage).
+* Can create a table using the `Insert Data Entry Table` command in the 
+  Jupyter Lab command palette.
+* If using [JupyterPhysSciLab/InstructorTools](https://github.com/JupyterPhysSciLab/jupyter-instructortools)
+  tables can be created using an item in the "Instructor Tools" menu 
+  (recommended usage).
 * Table column and row labels can be locked once set.
 * Number of rows and columns must be chosen on initial creation.
 * Table will survive deletion of all cell output data.
-* Default setting is to protect the code cell that creates the table. This 
-  blocks editing and deleting.
-* Table creation code will work without this package installed in the Jupyter
-kernel. Tables are viewable, but not editable in a plain vanilla Jupyter install.
-* Menu option to create a Pandas DataFrame from the table.
+* The code that creates the table and stores the data is not editable or 
+  deletable by the user of the notebook unless they manually change the cell 
+  metadata (not easily accessible in the simpler `jupyter notebook` mode rather 
+  than `jupyter lab` mode).
+* Table creation code will work without this extension installed. Tables are 
+  viewable, but not editable in a plain vanilla Jupyter install.
+* Tables include a button to create a [Pandas](https://pandas.pydata.org/) 
+  dataframe from the table data. The code to create the dataframe is 
+  automatically inserted into a new cell immediately below the table and run.
+  This cell is editable by the user.
 
-#### Wishlist:
+### Wishlist:
 
-* Add rows to existing table.
+* Add rows or columns to existing table.
 
-#### Usage:
-If you are using and have initialized the JupyterPhysSciLab/InstructorTools
-select the "insert table..." item from the menu. This will initiate the table
-creation process with a dialogbox.
+## Usage:
+### Create a new table using the currently selected code cell.
+*NB: This will replace anything currently in the cell!*
 
-If you are not using the InstructorTools package, but the package 
-`jupyter_datainputtable` is installed in your Jupyter/Python 
-environment start by importing it:
-```
-import input_table
-```
-You initiate the table creation process with the command:
-```
-input_table.create_input_table()
-```
+If you are using JupyterPhysSciLab/InstructorTools and have activated the menu
+select the "Insert New Data Table..." item from the menu (figure 1).
+
+![JPSL Instructor Tools Menu](JPSL Instructor Menu ann.png)
+
+**Figure 1:** Menu item in JPSL Instructor Tools menu.
+
+Alternatively, you can create a new table using the "Insert Data Entry Table"
+command in the Jupyter Lab command pallet (figure 2).
+
+![Jupyter Command Pallet](Command_Palette_ann.png)
+
+**Figure 2:** Item in the Jupyter Lab command palette.
+
+Either will initiate the table creation process with a dialog (figure 3).
+
+![Data table creation dialog](Data_table_creation_dialog.png)
+
+**Figure 3:** Data table creation dialog.
+### Entering and saving data
+Once the table is created and you have edited and locked the column and row 
+labels, users can enter information in the data cells after clicking the 
+"Edit Data" button (figure 4). To save their edits they click the "Save 
+Table" button.
+
+![Data table in edit mode.](table_in_edit_mode.png)
+
+**Figure 4:** Data table in edit mode.
+
+The table actions are inactive if this extension is not installed.
+
+![Table without extension installed](table_without_extension.png)
+
+**Figure 5:** Data table in notebook without this extension installed.
 ## Requirements
 
 - JupyterLab >= 4.0.0
