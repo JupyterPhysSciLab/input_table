@@ -1,7 +1,7 @@
 # Changelog
 
 <!-- <START NEW CHANGELOG ENTRY> -->
-## 0.8.0 (June XX, 2024)
+## 0.8.0 (June 5, 2024)
 * Converted to a Jupyter Lab 4+ and notebook 7+ compatible plugin.
 * **DEPRECATION:** Input data tables created with earlier versions will not 
   be editable or create pandas dataframes with this version. Tables should 
@@ -17,6 +17,7 @@
 * Code that creates table no longer automatically collapsed, but only 
   consists of four lines as the html is on a single line. Still can be 
   manually collapsed.
+* Switched to Jupyter compatible BSD licensing.
 <!-- <END NEW CHANGELOG ENTRY> -->
 ## 0.7.6
 * update requirements to use upstream bug fixes.

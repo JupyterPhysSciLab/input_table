@@ -1,7 +1,7 @@
 # jupyter_datainputtable
-
+<!-- Set this up once working on github
 [![Github Actions Status](https://github.com/JupyterPhysSciLab/jupyter-datainputtable/workflows/Build/badge.svg)](https://github.com/JupyterPhysSciLab/jupyter-datainputtable/actions/workflows/build.yml)
-
+-->
 Tools for generating predefined data input tables for use in Jupyter notebooks.
 This is primarily for student worksheets.
 
@@ -75,6 +75,7 @@ The table actions are inactive if this extension is not installed.
 ## Requirements
 
 - JupyterLab >= 4.0.0
+- notebook >= 7.0.0
 
 ## Install
 
@@ -140,7 +141,7 @@ In development mode, you will also need to remove the symlink created by `jupyte
 command. To find its location, you can run `jupyter labextension list` to figure out where the `labextensions`
 folder is located. Then you can remove the symlink named `jupyter-datainputtable` within that folder.
 
-### Testing the extension
+### Testing the extension (currently incomplete)
 
 #### Frontend tests
 
