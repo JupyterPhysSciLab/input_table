@@ -3,7 +3,9 @@
 [![Github Actions Status](https://github.com/JupyterPhysSciLab/jupyter-datainputtable/workflows/Build/badge.svg)](https://github.com/JupyterPhysSciLab/jupyter-datainputtable/actions/workflows/build.yml)
 -->
 Tools for generating predefined data input tables for use in Jupyter notebooks.
-This is primarily for student worksheets.
+This is primarily for student worksheets. This is part of the
+[Jupyter Physical Science Lab project](https://jupyterphysscilab.github.io/Documentation/),
+but can be used independently of the rest of the project.
 
 TOC: [Current Features](#current-features) | [Usage](#usage) | 
 [Requirements](#requirements) | [Install](#install) | [Uninstall](#uninstall) |
