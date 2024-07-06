@@ -43,20 +43,20 @@ TOC: [Current Features](#current-features) | [Usage](#usage) |
 If you are using JupyterPhysSciLab/InstructorTools and have activated the menu
 select the "Insert New Data Table..." item from the menu (figure 1).
 
-![JPSL Instructor Tools Menu](https://github.com/JupyterPhysSciLab/jupyter-datainputtable/blob/master/JPSL_Instructor_Menu_ann.png)
+![JPSL Instructor Tools Menu](https://raw.github.com/JupyterPhysSciLab/jupyter-datainputtable/master/JPSL_Instructor_Menu_ann.png)
 
 **Figure 1:** Menu item in JPSL Instructor Tools menu.
 
 Alternatively, you can create a new table using the "Insert Data Entry Table"
 command in the Jupyter Lab command pallet (figure 2).
 
-![Jupyter Command Pallet](https://github.com/JupyterPhysSciLab/jupyter-datainputtable/blob/master/Command_Palette_ann.png)
+![Jupyter Command Pallet](https://raw.github.com/JupyterPhysSciLab/jupyter-datainputtable/master/Command_Palette_ann.png)
 
 **Figure 2:** Item in the Jupyter Lab command palette.
 
 Either will initiate the table creation process with a dialog (figure 3).
 
-![Data table creation dialog](https://github.com/JupyterPhysSciLab/jupyter-datainputtable/blob/master/Data_table_creation_dialog.png)
+![Data table creation dialog](https://raw.github.com/JupyterPhysSciLab/jupyter-datainputtable/master/Data_table_creation_dialog.png)
 
 **Figure 3:** Data table creation dialog.
 ### Entering and saving data
@@ -65,13 +65,13 @@ labels, users can enter information in the data cells after clicking the
 "Edit Data" button (figure 4). To save their edits they click the "Save 
 Table" button.
 
-![Data table in edit mode.](https://github.com/JupyterPhysSciLab/jupyter-datainputtable/blob/master/table_in_edit_mode.png)
+![Data table in edit mode.](https://raw.github.com/JupyterPhysSciLab/jupyter-datainputtable/master/table_in_edit_mode.png)
 
 **Figure 4:** Data table in edit mode.
 
 The table actions are inactive if this extension is not installed.
 
-![Table without extension installed](https://github.com/JupyterPhysSciLab/jupyter-datainputtable/blob/master/table_without_extension.png)
+![Table without extension installed](https://raw.github.com/JupyterPhysSciLab/jupyter-datainputtable/master/table_without_extension.png)
 
 **Figure 5:** Data table in notebook without this extension installed.
 ## Requirements
